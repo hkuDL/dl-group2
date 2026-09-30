@@ -2,7 +2,6 @@
 
     <compiler angle="radian"/>
 
-<!--    <include file="./g1_with_hands_grasp.xml"/>-->
     <include file="./scene_with_hands.xml"/>
     <option gravity="0 0 -9.81"/>
     <worldbody>
@@ -16,51 +15,30 @@
             rgba="0.7 0.7 0.7 1"
         />
 
-        <!-- 桌子 -->
-        <body name="table" pos="0.60 0 0.55">
+        <!-- 桌子：抬高 + 靠近机器人 -->
+        <!-- 桌面顶部从 0.60m 提到 0.70m -->
+        <!-- 桌面前沿从 0.15m 移到 0.10m，更靠近机器人 -->
+        <body name="table" pos="0.45 0 0.65">
 
             <geom
                 name="table_top"
                 type="box"
-                size="0.45 0.45 0.05"
+                size="0.35 0.35 0.05"
                 pos="0 0 0"
                 rgba="0.5 0.5 0.5 1"
             />
 
-            <geom
-                name="table_leg_1"
-                type="box"
-                size="0.05 0.05 0.40"
-                pos="0.35 0.35 -0.40"
-            />
-
-            <geom
-                name="table_leg_2"
-                type="box"
-                size="0.05 0.05 0.40"
-                pos="0.35 -0.35 -0.40"
-            />
-
-            <geom
-                name="table_leg_3"
-                type="box"
-                size="0.05 0.05 0.40"
-                pos="-0.35 0.35 -0.40"
-            />
-
-            <geom
-                name="table_leg_4"
-                type="box"
-                size="0.05 0.05 0.40"
-                pos="-0.35 -0.35 -0.40"
-            />
+            <geom name="table_leg_1" type="box" size="0.03 0.03 0.33" pos=" 0.30  0.30 -0.38"/>
+            <geom name="table_leg_2" type="box" size="0.03 0.03 0.33" pos=" 0.30 -0.30 -0.38"/>
+            <geom name="table_leg_3" type="box" size="0.03 0.03 0.33" pos="-0.30  0.30 -0.38"/>
+            <geom name="table_leg_4" type="box" size="0.03 0.03 0.33" pos="-0.30 -0.30 -0.38"/>
 
         </body>
 
-        <!-- Cube -->
+        <!-- Cube：放在桌面前边缘，更靠近机器人 -->
         <body
             name="cube"
-            pos="0.35 0 0.65"
+            pos="0.25 0.05 0.80"
         >
 
             <freejoint/>
@@ -68,7 +46,7 @@
             <geom
                 name="cube_geom"
                 type="box"
-                size="0.05 0.05 0.05"
+                size="0.03 0.03 0.03"
                 mass="0.1"
                 friction="1 0.5 0.5"
                 rgba="0.8 0.2 0.2 1"
