@@ -1,0 +1,12 @@
+# ---- 临时文件 ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+*.tmp
+
+# ---- 运行产物 ----
+outputs/
+
+# ignore models/README.md（本机安装笔记，不提交）
+models/README.md
