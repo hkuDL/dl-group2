@@ -1,0 +1,39 @@
+<mujoco model="G1 table and wooden blocks">
+  <include file="scene_43dof.xml"/>
+
+  <asset>
+    <material name="table_wood" rgba="0.45 0.27 0.13 1"/>
+    <material name="block_wood" rgba="0.78 0.55 0.28 1"/>
+    <material name="block_red" rgba="0.72 0.22 0.15 1"/>
+  </asset>
+
+  <worldbody>
+    <!-- Robot faces +X. Table top is 0.70 m above the ground. -->
+    <body name="block_table" pos="0.65 0 0">
+      <geom name="table_top" type="box" pos="0 0 0.675"
+            size="0.22 0.38 0.025" material="table_wood"/>
+      <geom name="table_leg_fl" type="box" pos="-0.18 0.34 0.325"
+            size="0.025 0.025 0.325" material="table_wood"/>
+      <geom name="table_leg_fr" type="box" pos="-0.18 -0.34 0.325"
+            size="0.025 0.025 0.325" material="table_wood"/>
+      <geom name="table_leg_bl" type="box" pos="0.18 0.34 0.325"
+            size="0.025 0.025 0.325" material="table_wood"/>
+      <geom name="table_leg_br" type="box" pos="0.18 -0.34 0.325"
+            size="0.025 0.025 0.325" material="table_wood"/>
+    </body>
+
+    <!-- Append object joints after robot joints to retain SDK joint indices. -->
+    <!-- Box size values are half lengths: these cubes are 6 cm wide. -->
+    <body name="wood_block" pos="0.475 -0.177 0.735">
+      <freejoint name="wood_block_free"/>
+      <geom name="wood_block_geom" type="box" size="0.03 0.03 0.03"
+            mass="0.08" material="block_wood" friction="1 0.005 0.0001"/>
+    </body>
+    <body name="red_block" pos="0.70 0.15 0.735">
+      <freejoint name="red_block_free"/>
+      <geom name="red_block_geom" type="box" size="0.03 0.03 0.03"
+            mass="0.08" material="block_red" friction="1 0.005 0.0001"/>
+    </body>
+    <camera name="blocks_overview" pos="2.1 -2 1.7" xyaxes="0.78 0.62 0 -0.25 0.32 0.91"/>
+  </worldbody>
+</mujoco>

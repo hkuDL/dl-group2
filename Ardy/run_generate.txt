@@ -3,9 +3,9 @@ export TEXT_ENCODER_MODE=local
 export HF_HUB_OFFLINE=1
 export TRANSFORMERS_OFFLINE=1
 
-python scripts/generate.py "A person is dancing." \
+python scripts/generate.py "A person walks in a circle." \
   --model g1 \
   --checkpoints_dir ./checkpoints \
   --duration 5 \
   --seed 0 \
-  --output baseline_dancing
+  --output baseline_g1

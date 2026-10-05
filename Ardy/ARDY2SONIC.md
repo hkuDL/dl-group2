@@ -32,3 +32,44 @@ t-开始播放
 r-回到第一帧
 
 6080远程桌面terminal关闭，sonic控制器自动停下
+
+
+## 目前 ardy2sonic的问题
+
+目前的问题：ARDY 当前的 G1 模型不生成手指动作，所以grasp动作也只有伸出手臂，输入一次 prompt，身体和手指一起动这个问题需要解决。
+
+
+
+
+## 手动控制sonic
+跑起来 VNC 和 sonic 控制器
+cd /workspace/group2/workspace/fuyuhan/GR00T-WholeBodyControl
+
+DISPLAY=:1 python gear_sonic/scripts/run_sim_loop.py \
+  --interface lo \
+  --scene-path gear_sonic/data/robot_model/model_data/g1/scene_43dof_blocks.xml
+
+
+cd /workspace/group2/workspace/fuyuhan/GR00T-WholeBodyControl/gear_sonic_deploy
+
+MUSA_VISIBLE_DEVICES=4 CUDA_VISIBLE_DEVICES=4 \
+./target/release/g1_deploy_onnx_ref \
+  lo \
+  policy/release/model_decoder.onnx \
+  reference/ardy/ \
+  --obs-config policy/release/observation_config.yaml \
+  --encoder-file policy/release/model_encoder.onnx \
+  --input-type keyboard \
+  --policy-precision 32 \
+  --disable-crc-check
+然后
+
+
+| 按键 | 功能 |
+|---|---|
+| `]` | 启动控制 |
+| `u` | 右手闭合 |
+| `y` | 右手张开 |
+| `k` | 左手闭合 |
+| `m` | 左手张开 |
+| `o` | 停止控制并退出 |
