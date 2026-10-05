@@ -1,0 +1,1 @@
+python scripts/visualize.py outputs/baseline_g1.npz --port 2334

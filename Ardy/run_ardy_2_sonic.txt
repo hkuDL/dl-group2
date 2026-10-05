@@ -1,0 +1,5 @@
+cd /workspace/group2/workspace/fuyuhan/GR00T-WholeBodyControl
+
+python gear_sonic_deploy/reference/convert_ardy.py \
+  ../ardy/outputs/baseline_dancing.npz \
+  --output-dir gear_sonic_deploy/reference/ardy/dancing
