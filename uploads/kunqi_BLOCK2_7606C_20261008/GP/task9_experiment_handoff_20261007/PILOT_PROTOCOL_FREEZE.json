@@ -1,0 +1,94 @@
+{
+  "manifest_schema_version": "t9_pilot_manifest_v0.1",
+  "protocol_version": "t9_eval_v0.3-pilot20",
+  "status": "frozen_for_pilot_pending_live_preflight",
+  "formal_score": false,
+  "purpose": "development end-to-end comparison and profiling; not a formal reliability claim",
+  "task": {
+    "task_id": "grasp_and_lift",
+    "grasp_arm": "right",
+    "place_enabled": false,
+    "semantic_instruction": "Use the right hand to grasp the cube, lift it at least 0.10 m above its initial height, and hold it continuously for at least 2.0 s."
+  },
+  "runtime": {
+    "host": "worker00038",
+    "container": "va-train",
+    "accelerator_model": "MTT S4000",
+    "generation_accelerator_policy": "S4000 only; H100 results excluded from this batch",
+    "execution_accelerator_policy": "S4000 only",
+    "physical_device_id_must_be_logged": true,
+    "shared_device_state_must_be_logged": true,
+    "reference_rate_hz": 50,
+    "reference_frames": 810,
+    "episode_duration_seconds": 16.2,
+    "physics_rate_hz": 200,
+    "expected_physics_steps": 3240
+  },
+  "trial_policy": {
+    "candidate_budget": 1,
+    "selection_policy": "single_shot_index_0",
+    "retry_policy": "no_retry",
+    "replays_per_generated_candidate": 1,
+    "runtime_user_corrections": 0,
+    "no_post_outcome_tuning": true,
+    "failed_trials_remain_in_denominator": true,
+    "planned_trials_total": 20,
+    "trials_per_method_case": 2,
+    "seed_list": [2, 3]
+  },
+  "criteria": {
+    "minimum_lift_m": 0.1,
+    "minimum_continuous_hold_seconds": 2.0,
+    "minimum_contact_force_n": 0.0001,
+    "requires_right_thumb_and_index_or_middle_opposing_contact": true,
+    "requires_no_cube_table_contact_during_qualifying_hold": true,
+    "robot_table_contact_policy": "diagnostic_only_not_automatic_failure",
+    "requires_no_fall": true,
+    "forbids_weld_or_attachment": true,
+    "forbids_external_support_or_force": true,
+    "forbids_teleport": true,
+    "requires_complete_finite_synchronized_replay": true
+  },
+  "cases": [
+    {"case_id": "center", "position_xyz_m": [0.4, -0.15, 0.785], "yaw_rad": 0.0},
+    {"case_id": "near", "position_xyz_m": [0.3, -0.15, 0.785], "yaw_rad": 0.0},
+    {"case_id": "far", "position_xyz_m": [0.5, -0.15, 0.785], "yaw_rad": 0.0},
+    {"case_id": "left", "position_xyz_m": [0.4, 0.0, 0.785], "yaw_rad": 0.0},
+    {"case_id": "right", "position_xyz_m": [0.4, -0.3, 0.785], "yaw_rad": 0.0}
+  ],
+  "methods": {
+    "ardy": {
+      "report_label": "ARDY + structured coordinate constraints + trajectory adaptation",
+      "handoff_root": "/workspace/group2/workspace/tuchengyuan/task5/ardy_handoff_20261007",
+      "candidate_definition": "one ARDY call for the full 16 s trajectory",
+      "known_native_recipe": "ARDY-G1-RP-25FPS-Horizon52; 10 denoising steps; deterministic trajectory adaptation and 3 cm table clearance",
+      "development_disclosure": "center/seed0 and 3 cm clearance were tuned; pilot uses seeds 2 and 3"
+    },
+    "kimodo": {
+      "report_label": "Kimodo + segmented constraints + canonical adapter",
+      "handoff_root": "/workspace/group2/kimodo-t6/g1-integration/task8_development_20261007_v3",
+      "accepted_development_candidate": "accepted_touch_allowed_profile",
+      "accepted_config_sha256": "6826f1a852484e35819007fa189d0763a873dc61372cd3857d29cc4c5ca3b891",
+      "accepted_reference_sha256": "640bc21a9f93cdd60f8e27a4f3b027d80652734bcef1ed631b8188abe25313c7",
+      "development_disclosure": "accepted candidate followed four adapter/replay development attempts; pilot must generate fresh seeds 2 and 3"
+    }
+  },
+  "required_live_preflight_fields": [
+    "canonical source commit/archive SHA-256",
+    "scene SHA-256",
+    "neutral/reset SHA-256",
+    "SONIC binary/config SHA-256",
+    "Hand PD source/config SHA-256",
+    "evaluator source SHA-256",
+    "method checkpoint and adapter SHA-256",
+    "container image digest",
+    "physical S4000 device ID and occupancy",
+    "exact method entrypoint and timeout"
+  ],
+  "latency_interpretation": {
+    "record_raw_generation_latency": true,
+    "record_stage_breakdown": true,
+    "direct_speed_ranking_allowed_only_if": "same physical S4000, occupancy class, warm-up policy, precision, candidate budget, synchronization and timing boundary",
+    "otherwise": "report stratified descriptive latency and explain recipe differences"
+  }
+}

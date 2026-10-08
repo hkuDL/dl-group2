@@ -1,0 +1,46 @@
+{
+  "scene_xml": {
+    "path": "/workspace/group2/dl-group2/scenes/tabletop.xml",
+    "sha256": "e3a92089bb550afdb3aca43a5a8c7fb75f483836cd7a466ef56e39d34aabc19d"
+  },
+  "robot_xml": {
+    "path": "/workspace/group2/GR00T-WholeBodyControl/decoupled_wbc/control/robot_model/model_data/g1/g1_29dof_with_hand_rev_1_0_activatedfinger.xml",
+    "sha256": "72fa3c795c24fe357ae8725452f1487e0176847e191568ff5403322674f60c9c"
+  },
+  "grasp_cases": {
+    "path": "/workspace/group2/dl-group2/configs/grasp_cases.json",
+    "sha256": "25a69154ff41e2d12627fcf7800e6ac4c4c4825304b1e66b9a8cf164b5635811"
+  },
+  "neutral_standing": {
+    "path": "/workspace/group2/dl-group2/configs/neutral_standing.json",
+    "sha256": "6abf32c0745a1236b1c7c6f2d6b9f5850a63677f1fe0e24f569ce3308cba676a"
+  },
+  "scene_loader": {
+    "path": "/workspace/group2/dl-group2/scripts/scene.py",
+    "sha256": "2d991287cd8937bb9460e0e5e393e3a73e07e784b8328944f6d39d0c4a9d4b5f"
+  },
+  "case_reset": {
+    "path": "/workspace/group2/dl-group2/scripts/cases.py",
+    "sha256": "cb28e3871dfdd9d02054f48bf08f25145c5e7258b6865e6f693ff8e5841985ab"
+  },
+  "episode_schema": {
+    "path": "/workspace/group2/dl-group2/scripts/episode_schema.py",
+    "sha256": "a8dd75675b5818faae83768b6779ce25569b47a5fe7257c7f5a219439d6cab45"
+  },
+  "expert_trajectory": {
+    "path": "/workspace/group2/dl-group2/scripts/expert_trajectory.py",
+    "sha256": "fcb5eada28d84e11f209f6969f1b2290152ac2677fb8980c35799858e2b8071c"
+  },
+  "grasp_reference": {
+    "path": "/workspace/group2/dl-group2/scripts/grasp_reference.py",
+    "sha256": "f0f446c183151b1d30a807c0e1eee4e63bb61d864041a75c61da6cefab4332b4"
+  },
+  "coordinate_inverse": {
+    "path": "/workspace/group2/kimodo-t6/g1-integration/coordinate-repair-20261007-v2/kimodo_condition_coordinates.py",
+    "sha256": "1baa61d2225f25ed2e94eba8510d97e57cf33554c9a1adb5b65f05d5248ee79a"
+  },
+  "pose_codec": {
+    "path": "/workspace/group2/kimodo-t6/g1-integration/coordinate-repair-20261007-v2/kimodo_pose_constraint_codec.py",
+    "sha256": "4c191381d6667cf68916f7d6a1f95b41c769bbd9076a2b93d3adfdfd530ca4ad"
+  }
+}

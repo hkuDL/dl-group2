@@ -1,0 +1,46 @@
+{
+  "schema_version": "t9_profile_manifest_v0.3",
+  "runs": [
+    {
+      "run_id": "ardy-center-smoke-0",
+      "experiment_id": "synthetic-exp-v0.3",
+      "config_id": "synthetic-config-v0.3",
+      "method": "ardy",
+      "run_type": "not_final_smoke",
+      "case_id": "center",
+      "trial_index": 0,
+      "status": "completed",
+      "failure_reason": null,
+      "requirements": [
+        {
+          "scope": "generation",
+          "stage": "generation_total",
+          "clock": "musa_event",
+          "expected_count": 1
+        },
+        {
+          "scope": "control_step",
+          "stage": "dds_state_publish_bundle",
+          "clock": "perf_counter_ns",
+          "expected_count": 1,
+          "frame_start": 0,
+          "frame_stride": 1
+        },
+        {
+          "scope": "control_step",
+          "stage": "dds_command_read",
+          "clock": "perf_counter_ns",
+          "expected_count": 1,
+          "frame_start": 0,
+          "frame_stride": 1
+        },
+        {
+          "scope": "episode",
+          "stage": "execution",
+          "clock": "perf_counter_ns",
+          "expected_count": 1
+        }
+      ]
+    }
+  ]
+}

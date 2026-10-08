@@ -1,0 +1,80 @@
+{
+  "task_id": "kimodo-center-seed0-16p2-v1",
+  "model_name": "Kimodo-G1-RP-v1",
+  "fps": 30,
+  "source_fps": 30,
+  "requested_frames": 487,
+  "source_qpos_joint_order": [
+    "left_hip_pitch_joint",
+    "left_hip_roll_joint",
+    "left_hip_yaw_joint",
+    "left_knee_joint",
+    "left_ankle_pitch_joint",
+    "left_ankle_roll_joint",
+    "right_hip_pitch_joint",
+    "right_hip_roll_joint",
+    "right_hip_yaw_joint",
+    "right_knee_joint",
+    "right_ankle_pitch_joint",
+    "right_ankle_roll_joint",
+    "waist_yaw_joint",
+    "waist_roll_joint",
+    "waist_pitch_joint",
+    "left_shoulder_pitch_joint",
+    "left_shoulder_roll_joint",
+    "left_shoulder_yaw_joint",
+    "left_elbow_joint",
+    "left_wrist_roll_joint",
+    "left_wrist_pitch_joint",
+    "left_wrist_yaw_joint",
+    "right_shoulder_pitch_joint",
+    "right_shoulder_roll_joint",
+    "right_shoulder_yaw_joint",
+    "right_elbow_joint",
+    "right_wrist_roll_joint",
+    "right_wrist_pitch_joint",
+    "right_wrist_yaw_joint"
+  ],
+  "prompt": "A standing person reaches the right hand over the table, grasps the red cube with the right thumb and fingers, lifts it, and holds it steadily above the table.",
+  "seed": 0,
+  "num_denoising_steps": 100,
+  "cfg_weight": [
+    2.0,
+    2.0
+  ],
+  "post_processing": false,
+  "physical_gpu": 1,
+  "logical_device": "musa:0",
+  "source_hashes": {
+    "/workspace/group2/kimodo-t6/g1-integration/grasp-e2e-20261007-v1/task/task.json": "65896cd6f5e6437e01eaf1a15cbcfe262cc046a1d6afbd0eed34213b5c8df3a8",
+    "/workspace/group2/kimodo-t6/g1-integration/grasp-e2e-20261007-v1/task/task_plan.npz": "f5aea9cd86c9a252b48dc5a5c996b64ab932a2a83205a7834e2c10c0e0e2a2a1",
+    "/workspace/group2/kimodo-t6/g1-integration/grasp-e2e-20261007-v1/task/pose_constraints.json": "e5766cd895fda1e59909aa81a05557927a75b88b469915dcf515136c0fe41b47"
+  },
+  "model_generation_run": true,
+  "physical_replay_run": false,
+  "coordinate_validation": {
+    "saved_matrix_roundtrip_max_error": 1.1920928955078125e-07,
+    "world_xyz_identity_mapping": false,
+    "coordinate_contract": "canonical_raw_qpos_to_verified_model_local_matrices_to_model_FK"
+  },
+  "condition_keys": [
+    "global_joints_positions",
+    "smooth_root_2d",
+    "root_y_pos",
+    "global_root_heading",
+    "global_joints_rots"
+  ],
+  "condition_max_frame": 486,
+  "checkpoint_hashes": {
+    "config.yaml": "73b550ba606d69847725ee257d5d99fa5cd56bd8bac320dbe5c2a49f0873846c",
+    "model.safetensors": "e18c1de73e2ce17a107b06d85155fbbc5debe68eb35455aa5b033e6ddbe056a5"
+  },
+  "resolved_model": "kimodo-g1-rp",
+  "model_load_seconds": 23.312362678989302,
+  "actual_frames": 487,
+  "actual_source_last_timestamp_s": 16.2,
+  "generation_wall_seconds": 57.15204073500354,
+  "peak_allocated_gpu_bytes": 1304036864,
+  "raw_sha256": "0b79968e56d8c71f4621d67376d0aa63cdbee176fd26c42d8350b77b75d4f5e2",
+  "raw_qpos_sha256": "4b254238b23cc338368e5924353896aea0861d4c2284dca53b5907181a58bb7c"
+}

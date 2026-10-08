@@ -1,0 +1,73 @@
+{
+  "report_version": "task9_pilot20_results_v1",
+  "protocol_version": "t9_eval_v0.3-pilot20",
+  "formal_score": false,
+  "executed_on": "2026-10-08",
+  "remote_result_root": "/workspace/group2/workspace/kunqi/task9_pilot20_20261007",
+  "planned_trials": 20,
+  "methods": {
+    "ardy": {
+      "planned_trials": 10,
+      "candidate_successes": 8,
+      "preparation_failures": 2,
+      "valid_replays": 8,
+      "physical_successes": 2,
+      "expert_valid_successes": 0,
+      "planned_denominator_physical_success_rate": 0.2,
+      "planned_denominator_expert_valid_rate": 0.0,
+      "replayed_denominator_physical_success_rate": 0.25,
+      "replayed_denominator_expert_valid_rate": 0.0,
+      "actual_reference_frames": 800,
+      "actual_episode_duration_seconds_approx": 16.0
+    },
+    "kimodo": {
+      "planned_trials": 10,
+      "candidate_successes": 6,
+      "preparation_failures": 4,
+      "valid_replays": 6,
+      "physical_successes": 3,
+      "expert_valid_successes": 3,
+      "planned_denominator_physical_success_rate": 0.3,
+      "planned_denominator_expert_valid_rate": 0.3,
+      "replayed_denominator_physical_success_rate": 0.5,
+      "replayed_denominator_expert_valid_rate": 0.5,
+      "actual_reference_frames": 810,
+      "actual_episode_duration_seconds": 16.2
+    }
+  },
+  "case_summary": {
+    "center": {
+      "ardy_physical_successes": 0,
+      "ardy_expert_valid_successes": 0,
+      "kimodo_physical_successes": 1,
+      "kimodo_expert_valid_successes": 1
+    },
+    "near": {
+      "ardy_physical_successes": 2,
+      "ardy_expert_valid_successes": 0,
+      "kimodo_physical_successes": 2,
+      "kimodo_expert_valid_successes": 2
+    },
+    "far": {
+      "ardy_preparation_failures": 2,
+      "kimodo_preparation_failures": 2
+    },
+    "left": {
+      "ardy_physical_successes": 0,
+      "ardy_expert_valid_successes": 0,
+      "kimodo_preparation_failures": 2
+    },
+    "right": {
+      "ardy_physical_successes": 0,
+      "ardy_expert_valid_successes": 0,
+      "kimodo_physical_successes": 0,
+      "kimodo_expert_valid_successes": 0
+    }
+  },
+  "known_protocol_deviations": [
+    "ARDY used 800 frames and approximately 16.0 seconds while Kimodo used 810 frames and 16.2 seconds.",
+    "Full profiling schema v0.3 event streams were not produced.",
+    "Generation recipes and comparable timing boundaries differ between methods.",
+    "Strict ARDY failures depend on robot_environment_support_contact interpretation and should retain separate physical and expert-valid reporting."
+  ]
+}

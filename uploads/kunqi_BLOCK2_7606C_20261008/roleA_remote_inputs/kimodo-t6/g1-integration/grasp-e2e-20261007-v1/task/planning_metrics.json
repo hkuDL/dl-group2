@@ -1,0 +1,12 @@
+{
+  "grasp_and_lift_position_error_max_m": 9.8237040883145e-06,
+  "joint_limits_pass": true,
+  "frame_zero_pass": true,
+  "model_generation_run": false,
+  "physics_replay_run": false,
+  "source_frames": 487,
+  "reference_frames": 810,
+  "saved_matrix_roundtrip_max_error": 1.1920928955078125e-07,
+  "world_xyz_identity_mapping": false,
+  "coordinate_contract": "canonical_raw_qpos_to_verified_model_local_matrices_to_model_FK"
+}

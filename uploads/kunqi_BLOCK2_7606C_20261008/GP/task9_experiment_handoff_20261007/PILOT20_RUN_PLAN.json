@@ -1,0 +1,45 @@
+{
+  "plan_schema_version": "t9_run_plan_v0.2",
+  "protocol_version": "t9_eval_v0.3-pilot20",
+  "status": "locked_pending_live_preflight",
+  "run_type": "pilot",
+  "formal_score": false,
+  "planned_runs": 20,
+  "ordering": {
+    "strategy": "paired_by_case_and_seed_with_alternating_method_order",
+    "concurrency": 1,
+    "do_not_reorder_after_start": true
+  },
+  "common": {
+    "candidate_budget": 1,
+    "selection_policy": "single_shot_index_0",
+    "retry_policy": "no_retry",
+    "replays_per_candidate": 1,
+    "runtime_user_corrections": 0,
+    "reference_frames": 810,
+    "episode_duration_seconds": 16.2,
+    "expected_physics_steps": 3240
+  },
+  "runs": [
+    {"order": 1, "run_id": "p20-center-s2-ardy", "pair_id": "center-s2", "method": "ardy", "case_id": "center", "seed": 2, "position_xyz_m": [0.4, -0.15, 0.785]},
+    {"order": 2, "run_id": "p20-center-s2-kimodo", "pair_id": "center-s2", "method": "kimodo", "case_id": "center", "seed": 2, "position_xyz_m": [0.4, -0.15, 0.785]},
+    {"order": 3, "run_id": "p20-center-s3-kimodo", "pair_id": "center-s3", "method": "kimodo", "case_id": "center", "seed": 3, "position_xyz_m": [0.4, -0.15, 0.785]},
+    {"order": 4, "run_id": "p20-center-s3-ardy", "pair_id": "center-s3", "method": "ardy", "case_id": "center", "seed": 3, "position_xyz_m": [0.4, -0.15, 0.785]},
+    {"order": 5, "run_id": "p20-near-s2-ardy", "pair_id": "near-s2", "method": "ardy", "case_id": "near", "seed": 2, "position_xyz_m": [0.3, -0.15, 0.785]},
+    {"order": 6, "run_id": "p20-near-s2-kimodo", "pair_id": "near-s2", "method": "kimodo", "case_id": "near", "seed": 2, "position_xyz_m": [0.3, -0.15, 0.785]},
+    {"order": 7, "run_id": "p20-near-s3-kimodo", "pair_id": "near-s3", "method": "kimodo", "case_id": "near", "seed": 3, "position_xyz_m": [0.3, -0.15, 0.785]},
+    {"order": 8, "run_id": "p20-near-s3-ardy", "pair_id": "near-s3", "method": "ardy", "case_id": "near", "seed": 3, "position_xyz_m": [0.3, -0.15, 0.785]},
+    {"order": 9, "run_id": "p20-far-s2-ardy", "pair_id": "far-s2", "method": "ardy", "case_id": "far", "seed": 2, "position_xyz_m": [0.5, -0.15, 0.785]},
+    {"order": 10, "run_id": "p20-far-s2-kimodo", "pair_id": "far-s2", "method": "kimodo", "case_id": "far", "seed": 2, "position_xyz_m": [0.5, -0.15, 0.785]},
+    {"order": 11, "run_id": "p20-far-s3-kimodo", "pair_id": "far-s3", "method": "kimodo", "case_id": "far", "seed": 3, "position_xyz_m": [0.5, -0.15, 0.785]},
+    {"order": 12, "run_id": "p20-far-s3-ardy", "pair_id": "far-s3", "method": "ardy", "case_id": "far", "seed": 3, "position_xyz_m": [0.5, -0.15, 0.785]},
+    {"order": 13, "run_id": "p20-left-s2-ardy", "pair_id": "left-s2", "method": "ardy", "case_id": "left", "seed": 2, "position_xyz_m": [0.4, 0.0, 0.785]},
+    {"order": 14, "run_id": "p20-left-s2-kimodo", "pair_id": "left-s2", "method": "kimodo", "case_id": "left", "seed": 2, "position_xyz_m": [0.4, 0.0, 0.785]},
+    {"order": 15, "run_id": "p20-left-s3-kimodo", "pair_id": "left-s3", "method": "kimodo", "case_id": "left", "seed": 3, "position_xyz_m": [0.4, 0.0, 0.785]},
+    {"order": 16, "run_id": "p20-left-s3-ardy", "pair_id": "left-s3", "method": "ardy", "case_id": "left", "seed": 3, "position_xyz_m": [0.4, 0.0, 0.785]},
+    {"order": 17, "run_id": "p20-right-s2-ardy", "pair_id": "right-s2", "method": "ardy", "case_id": "right", "seed": 2, "position_xyz_m": [0.4, -0.3, 0.785]},
+    {"order": 18, "run_id": "p20-right-s2-kimodo", "pair_id": "right-s2", "method": "kimodo", "case_id": "right", "seed": 2, "position_xyz_m": [0.4, -0.3, 0.785]},
+    {"order": 19, "run_id": "p20-right-s3-kimodo", "pair_id": "right-s3", "method": "kimodo", "case_id": "right", "seed": 3, "position_xyz_m": [0.4, -0.3, 0.785]},
+    {"order": 20, "run_id": "p20-right-s3-ardy", "pair_id": "right-s3", "method": "ardy", "case_id": "right", "seed": 3, "position_xyz_m": [0.4, -0.3, 0.785]}
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "role": "A",
+  "owner": "kunqi + Codex",
+  "run_id": "role_A_20261007T163000_CST",
+  "task_id": "kimodo_center_right_seed0_role_a_20261007T163000_CST",
+  "contract_version": "kimodo_parallel_20261007_v1",
+  "status": "ready_for_integration",
+  "artifact_paths": {
+    "task.json": "/workspace/group2/handoffs/kimodo_parallel/role_A_20261007T163000_CST/artifacts/task.json",
+    "task_plan.npz": "/workspace/group2/handoffs/kimodo_parallel/role_A_20261007T163000_CST/artifacts/task_plan.npz",
+    "pose_constraints.json": "/workspace/group2/handoffs/kimodo_parallel/role_A_20261007T163000_CST/artifacts/pose_constraints.json",
+    "planning_metrics.json": "/workspace/group2/handoffs/kimodo_parallel/role_A_20261007T163000_CST/artifacts/planning_metrics.json"
+  },
+  "artifact_hashes": {
+    "task.json": "3d28462ebf4a1289d32c9f1582fa516b4951761850d0a8a58273fe4f30a97b39",
+    "task_plan.npz": "89af7b7b7493f89f18e684a45a6de04518bd6293b568bcbf372dc87881980b00",
+    "pose_constraints.json": "e3381097e14cf2a73a1cef77dbd2a5fa017df73a177f9ab970870e08b1ad3afe",
+    "planning_metrics.json": "72e5e1388ac8c539d662ba418c289b97f4de34fbdae8cadcefd62e819fa947ff"
+  },
+  "input_paths": {
+    "scene_xml": "/workspace/group2/dl-group2/scenes/tabletop.xml",
+    "robot_xml": "/workspace/group2/GR00T-WholeBodyControl/decoupled_wbc/control/robot_model/model_data/g1/g1_29dof_with_hand_rev_1_0_activatedfinger.xml",
+    "grasp_cases": "/workspace/group2/dl-group2/configs/grasp_cases.json",
+    "neutral_standing": "/workspace/group2/dl-group2/configs/neutral_standing.json",
+    "scene_loader": "/workspace/group2/dl-group2/scripts/scene.py",
+    "case_reset": "/workspace/group2/dl-group2/scripts/cases.py",
+    "episode_schema": "/workspace/group2/dl-group2/scripts/episode_schema.py",
+    "expert_trajectory": "/workspace/group2/dl-group2/scripts/expert_trajectory.py",
+    "grasp_reference": "/workspace/group2/dl-group2/scripts/grasp_reference.py",
+    "coordinate_inverse": "/workspace/group2/kimodo-t6/g1-integration/coordinate-repair-20261007-v2/kimodo_condition_coordinates.py",
+    "pose_codec": "/workspace/group2/kimodo-t6/g1-integration/coordinate-repair-20261007-v2/kimodo_pose_constraint_codec.py"
+  },
+  "input_hashes": {
+    "scene_xml": "e3a92089bb550afdb3aca43a5a8c7fb75f483836cd7a466ef56e39d34aabc19d",
+    "robot_xml": "72fa3c795c24fe357ae8725452f1487e0176847e191568ff5403322674f60c9c",
+    "grasp_cases": "25a69154ff41e2d12627fcf7800e6ac4c4c4825304b1e66b9a8cf164b5635811",
+    "neutral_standing": "6abf32c0745a1236b1c7c6f2d6b9f5850a63677f1fe0e24f569ce3308cba676a",
+    "scene_loader": "2d991287cd8937bb9460e0e5e393e3a73e07e784b8328944f6d39d0c4a9d4b5f",
+    "case_reset": "cb28e3871dfdd9d02054f48bf08f25145c5e7258b6865e6f693ff8e5841985ab",
+    "episode_schema": "a8dd75675b5818faae83768b6779ce25569b47a5fe7257c7f5a219439d6cab45",
+    "expert_trajectory": "fcb5eada28d84e11f209f6969f1b2290152ac2677fb8980c35799858e2b8071c",
+    "grasp_reference": "f0f446c183151b1d30a807c0e1eee4e63bb61d864041a75c61da6cefab4332b4",
+    "coordinate_inverse": "1baa61d2225f25ed2e94eba8510d97e57cf33554c9a1adb5b65f05d5248ee79a",
+    "pose_codec": "4c191381d6667cf68916f7d6a1f95b41c769bbd9076a2b93d3adfdfd530ca4ad"
+  },
+  "entrypoints": {
+    "prepare_grasp_task": "/workspace/group2/handoffs/kimodo_parallel/role_A_20261007T163000_CST/code/prepare_grasp_task.py"
+  },
+  "executed_commands": [
+    "bash /workspace/group2/handoffs/kimodo_parallel/role_A_20261007T163000_CST/run_role_a.sh"
+  ],
+  "test_results_path": "/workspace/group2/handoffs/kimodo_parallel/role_A_20261007T163000_CST/tests/test_results.json",
+  "fixture_only": false,
+  "real_generation_run": false,
+  "physical_replay_run": false,
+  "physical_success": null,
+  "expert_valid": null,
+  "resource_requirements": {
+    "gpu": false,
+    "dds": false
+  },
+  "pending": [
+    "Role B real Kimodo generation has not been run.",
+    "Role C canonical reference export has not been run.",
+    "SONIC/DDS and physical replay are intentionally not run by Role A.",
+    "physical_success and expert_valid remain null.",
+    "The formal comparison constraint/information budget still needs protocol freeze."
+  ]
+}
