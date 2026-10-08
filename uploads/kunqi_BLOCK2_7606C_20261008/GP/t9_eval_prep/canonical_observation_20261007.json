@@ -1,0 +1,72 @@
+{
+  "observation_schema_version": "t9_canonical_observation_v0.1",
+  "status": "observed_not_formally_frozen",
+  "observed_at_utc": "2026-10-07T06:17:11Z",
+  "source": "user-provided read-only S4000 terminal output",
+  "environment": {
+    "host": "worker00038",
+    "container_name": "va-train",
+    "container_image_tag": "registry.mthreads.com/presale/devtech/vllm-mt:d0930",
+    "accelerator_model": "MTT S4000",
+    "accelerator_count": 8,
+    "group_gpu_allocation": [4, 5, 6, 7],
+    "python_version": "3.10.12",
+    "mthreads_gmi_version": "2.3.2",
+    "driver_version": "3.3.5-server"
+  },
+  "repository": {
+    "path": "/workspace/group2/dl-group2",
+    "remote": "https://github.com/haohao030115/dl-group2.git",
+    "branch": "grasp-pipeline",
+    "commit": "70aea3afb2fc94ad46fc10379f2c3c0af77a89df",
+    "dirty": false
+  },
+  "canonical_files": [
+    {
+      "path": "/workspace/group2/CANONICAL_TABLETOP_EXPERIMENT_BASE.md",
+      "sha256": "9d14f6d33c3078071683f132dd83dc55c378e448aae01b48714c0c5400f6d58b"
+    },
+    {
+      "path": "/workspace/group2/dl-group2/scenes/tabletop.xml",
+      "sha256": "e3a92089bb550afdb3aca43a5a8c7fb75f483836cd7a466ef56e39d34aabc19d"
+    },
+    {
+      "path": "/workspace/group2/dl-group2/configs/grasp_cases.json",
+      "sha256": "25a69154ff41e2d12627fcf7800e6ac4c4c4825304b1e66b9a8cf164b5635811"
+    },
+    {
+      "path": "/workspace/group2/dl-group2/configs/neutral_standing.json",
+      "sha256": "6abf32c0745a1236b1c7c6f2d6b9f5850a63677f1fe0e24f569ce3308cba676a"
+    }
+  ],
+  "ardy_development_grid": {
+    "path": "/workspace/group2/workspace/tuchengyuan/task5/ardy_handoff_20261007/grid_v1",
+    "test_type": "development robustness, not held-out final comparison",
+    "source_mode": "cached_ardy_coordinate_retarget",
+    "planned_trials": 10,
+    "executed_trials": 8,
+    "successful_trials": 4,
+    "far_prepare_failure": {
+      "failure_phase": "adapter",
+      "runtime_failure_category": "adapter_error",
+      "failure_reason": "ik_error_too_high",
+      "ik_error_m": 0.03351963343068778,
+      "threshold_m": 0.001
+    }
+  },
+  "kimodo_status": {
+    "canonical_g1_result_found_in_checked_paths": false,
+    "checked_paths": [
+      "/workspace/group2/kimodo-t6/g1-integration",
+      "/workspace/group2/workspace/amy/kimodo-work",
+      "/workspace/group2/kimodo-t6"
+    ],
+    "note": "The observed running Kimodo-SOMA-RP-v1 demo is not evidence of a canonical G1 grasp-and-lift trial."
+  },
+  "open_questions": [
+    "Task 7 final Kimodo G1 artifact path and one-command entrypoint",
+    "Final canonical source snapshot, controller hash and evaluator hash",
+    "Formal treatment of candidate-preparation failures",
+    "Final candidate budget, retry policy and trial count"
+  ]
+}

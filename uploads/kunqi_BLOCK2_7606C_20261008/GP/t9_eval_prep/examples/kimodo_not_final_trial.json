@@ -1,0 +1,207 @@
+{
+  "schema_version": "t9_trial_v0.1",
+  "protocol_version": "t9_eval_v0.2",
+  "run_id": "kimodo-fixed-center-left-seed42-smoke-20261006",
+  "run_type": "not_final_smoke",
+  "formal_score": false,
+  "method": "kimodo",
+  "task": "grasp_and_lift",
+  "batch_id": null,
+  "trial_index": 0,
+  "manifest_sha256": null,
+  "run_plan_sha256": null,
+  "run_plan_index": null,
+  "case": {
+    "case_id": "fixed_center_left",
+    "object_pose": {
+      "position_xyz_m": [
+        0.39,
+        0.15,
+        0.785
+      ],
+      "quaternion_wxyz": null
+    },
+    "grasp_arm": "left"
+  },
+  "input": {
+    "instruction_phases": [
+      "A robot reaches forward with its left hand, grasps a small cube on a table and lifts it while standing still."
+    ],
+    "seed": 42,
+    "conditioning_regime": "expert_dense",
+    "input_spec_hash": null,
+    "uses_expert_constraints": true,
+    "constraint_source": "validated expert-derived end-effector poses",
+    "constraint_mode": "dense",
+    "constraint_bundle_sha256": "48eadd6fae9129a63a751ab59fefbd8bce3e61d421a48a0692de29d61755d040",
+    "hand_reference_source": "validated independent controller",
+    "generation_timeout_seconds": null,
+    "execution_timeout_seconds": null
+  },
+  "candidates": {
+    "samples_requested": 3,
+    "samples_generated": 3,
+    "selected_sample_index": 0,
+    "selection_policy": null,
+    "retry_policy": null,
+    "attempted_sample_indices": [
+      0
+    ],
+    "retry_count": null
+  },
+  "versions": {
+    "source_commit": null,
+    "source_dirty": null,
+    "source_dirty_diff_sha256": null,
+    "generator_revision": "58e781898b3d7e328a676a75d3e338c45dce3ad9",
+    "integration_revision": "7e47fc6b2522b7754e64ee357e7244a117d7be84",
+    "integration_dirty": false,
+    "integration_dirty_diff_sha256": null,
+    "checkpoint_sha256": null,
+    "scene_sha256": null,
+    "controller_sha256": null,
+    "evaluator_sha256": null
+  },
+  "environments": {
+    "generation": {
+      "host": null,
+      "host_class": "H100",
+      "accelerator_model": null,
+      "container_digest": null,
+      "runtime_versions": {}
+    },
+    "execution": {
+      "host": null,
+      "host_class": "H100",
+      "accelerator_model": null,
+      "container_digest": null,
+      "runtime_versions": {}
+    }
+  },
+  "artifacts": [
+    {
+      "name": "pipeline.png",
+      "path": "../evidence/kimodo_not_final_smoke_20261006/pipeline.png",
+      "sha256": "4b9653bf8a917d46c4e76be2a9d5ce38c1406875337fd443b4f00d82688969bf"
+    },
+    {
+      "name": "report.json",
+      "path": "../evidence/kimodo_not_final_smoke_20261006/report.json",
+      "sha256": "729f3d1d7dcd5e02c35b646cc4bed5f7b727c7e872725e5812f1ba21b93f042c"
+    },
+    {
+      "name": "run_generation.txt",
+      "path": "../evidence/kimodo_not_final_smoke_20261006/run_generation.txt",
+      "sha256": "9665a4c101a5c4618e0b0d09aceeaa11e5541357d5ef7ace9ae9cc0738799cbd"
+    },
+    {
+      "name": "演示说明.md",
+      "path": "../evidence/kimodo_not_final_smoke_20261006/演示说明.md",
+      "sha256": "68668f1c66023b900ab9f67ae763b4d1fb321c508ba7a1e0ab68682fc447bbda"
+    },
+    {
+      "name": "raw_npz",
+      "path": null,
+      "sha256": "3403780c3914660f1ad1aff1d9d897205a75af7c735017c24bd738cfb26d8344"
+    },
+    {
+      "name": "qpos_csv",
+      "path": null,
+      "sha256": "0d247289b122804c3e41d20560c39db9571ef1748588542b213a93a7b09aa8f9"
+    },
+    {
+      "name": "g1_projection_targets",
+      "path": null,
+      "sha256": "b69ca45a8d362b6bc89ac7f0d87a96973a6d4e36aa82348af0020c16c974120c"
+    }
+  ],
+  "execution": {
+    "controller": "SONIC",
+    "completed": true,
+    "expected_frames": 798,
+    "recorded_frames": 798,
+    "frame_coverage_complete": true,
+    "physics_hz": 200,
+    "physical_duration_seconds": 15.940000000001568,
+    "state_finite": true,
+    "hand_synchronized": true,
+    "fall": false,
+    "cube_attached": false,
+    "cube_teleported_during_rollout": false,
+    "body_reference_rmse_rad": 0.21860429265412773
+  },
+  "criteria": {
+    "minimum_lift_m": 0.1,
+    "minimum_continuous_hold_s": 2.0,
+    "requires_opposing_contacts": true,
+    "requires_no_cube_table_contact_during_hold": true,
+    "requires_complete_synchronized_rollout": true,
+    "requires_no_fall": true,
+    "forbids_attachment": true,
+    "forbids_teleport": true,
+    "robot_table_contact_policy": null
+  },
+  "metrics": {
+    "max_lift_m": 0.1320513916573618,
+    "final_lift_m": 0.11576500192737993,
+    "max_continuous_hold_seconds": 4.30999999999993,
+    "final_continuous_hold_seconds": 4.30999999999993,
+    "place_error_m": null
+  },
+  "contacts": {
+    "cube_table_contact_steps": null,
+    "cube_table_contact_during_hold": false,
+    "robot_table_contact_steps": 174,
+    "robot_table_contact_bodies": [
+      "left_hand_thumb_2_link"
+    ],
+    "robot_self_contact_steps": 0,
+    "robot_self_contact_pairs": [],
+    "active_arm_environment_contact_steps": 1627,
+    "inactive_arm_environment_contact_steps": 0,
+    "final_cube_contacts": [
+      {
+        "body": "left_hand_thumb_2_link",
+        "normal_force_n": 17.606492480190127
+      },
+      {
+        "body": "left_hand_middle_1_link",
+        "normal_force_n": 16.30611366348223
+      }
+    ]
+  },
+  "outcome": {
+    "runtime_valid": true,
+    "task_success": true,
+    "collision_observed": true,
+    "unsafe_collision": null,
+    "safety_success": null,
+    "overall_success": null,
+    "formal_eligible": false,
+    "source_physical_success": false,
+    "physical_execution_success": true
+  },
+  "failures": {
+    "runtime_failure_category": null,
+    "task_failure_category": null,
+    "safety_failure_categories": [],
+    "failure_phase": null,
+    "failure_reason": null
+  },
+  "timing": {
+    "generation_time_scope": "three_generated_candidates",
+    "generation_total_seconds": 112.64876556396484,
+    "execution_wall_seconds": null,
+    "started_at_utc": null
+  },
+  "open_questions": [
+    "What policy selected sample 0 from the three generated candidates?",
+    "Were retries permitted?",
+    "What does source_physical_success=false mean relative to expert_valid=true?",
+    "Does the recorded robot-table contact constitute an unsafe collision?"
+  ],
+  "notes": [
+    "Evidence-only fixed-scene integration smoke; do not include in formal aggregates.",
+    "The run used dense expert-derived constraints, G1 projection, and an independent hand controller."
+  ]
+}

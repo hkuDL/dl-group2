@@ -1,0 +1,117 @@
+{
+  "status": "ready_for_integration",
+  "max_position_error": 9.797385744713843e-06,
+  "mean_position_error": 4.7036488322662735e-06,
+  "max_orientation_error": 1.160550802235461e-05,
+  "mean_orientation_error": 4.144873024068322e-06,
+  "per_phase_position_error": {
+    "initial_entering": {
+      "max": 0.0,
+      "mean": 0.0,
+      "samples": 45
+    },
+    "approach_alignment": {
+      "max": 9.674024889410422e-06,
+      "mean": 4.128229976256683e-06,
+      "samples": 195
+    },
+    "finger_closing": {
+      "max": 9.226944146429181e-06,
+      "mean": 9.226944146429183e-06,
+      "samples": 60
+    },
+    "lift": {
+      "max": 9.797385744713843e-06,
+      "mean": 4.147079420083279e-06,
+      "samples": 60
+    },
+    "hold": {
+      "max": 5.379769464195861e-06,
+      "mean": 5.379769464195858e-06,
+      "samples": 127
+    }
+  },
+  "per_phase_orientation_error": {
+    "initial_entering": {
+      "max": 0.0,
+      "mean": 0.0,
+      "samples": 45
+    },
+    "approach_alignment": {
+      "max": 1.0739695993342462e-05,
+      "mean": 3.3360418462309358e-06,
+      "samples": 195
+    },
+    "finger_closing": {
+      "max": 3.000355374431064e-06,
+      "mean": 3.0003553744310646e-06,
+      "samples": 60
+    },
+    "lift": {
+      "max": 1.160550802235461e-05,
+      "mean": 3.07600479322202e-06,
+      "samples": 60
+    },
+    "hold": {
+      "max": 7.901129075961063e-06,
+      "mean": 7.901129075961065e-06,
+      "samples": 127
+    }
+  },
+  "grasp_and_lift_position_error_max_m": 9.797385744713843e-06,
+  "joint_limit_violations": [],
+  "joint_limits_pass": true,
+  "finite_check": true,
+  "initial_state_error": {
+    "root_max_abs": 0.0,
+    "body_max_abs": 0.0,
+    "wrist_position_m": 0.0,
+    "wrist_orientation_rad": 0.0,
+    "hand_max_abs": 0.0
+  },
+  "frame_zero_pass": true,
+  "phase_boundary_times": [
+    {
+      "name": "initial_entering",
+      "start_s": 0.0,
+      "end_s": 1.5
+    },
+    {
+      "name": "approach_alignment",
+      "start_s": 1.5,
+      "end_s": 8.0
+    },
+    {
+      "name": "finger_closing",
+      "start_s": 8.0,
+      "end_s": 10.0
+    },
+    {
+      "name": "lift",
+      "start_s": 10.0,
+      "end_s": 12.0
+    },
+    {
+      "name": "hold",
+      "start_s": 12.0,
+      "end_s": 16.2
+    }
+  ],
+  "coordinate_roundtrip_error": 1.1920928955078125e-07,
+  "pose_constraint_reload_error": 1.1920928955078125e-07,
+  "pose_constraint_codec_metadata": {
+    "saved_matrix_roundtrip_max_error": 1.1920928955078125e-07,
+    "world_xyz_identity_mapping": false,
+    "coordinate_contract": "canonical_raw_qpos_to_verified_model_local_matrices_to_model_FK"
+  },
+  "hand_joint_limit_violations": [],
+  "hand_timeline_alignment": true,
+  "first_hand_motion_s": 8.02,
+  "source_duration_sec": 16.2,
+  "reference_duration_sec": 16.18,
+  "source_frames": 487,
+  "reference_frames": 810,
+  "constraint_count": 83,
+  "model_generation_run": false,
+  "physics_replay_run": false
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": "t9_profile_manifest_v0.3",
+  "manifest_revision": "v2-smoke-only",
+  "revision_reason": "The initial smoke manifest copied an observed 3239-step baseline. The frozen 810-frame, 50 Hz reference executed by a 200 Hz physics loop plans 810*4=3240 control steps. This correction is retained as smoke preparation and must be predeclared before later runs.",
+  "runs": [
+    {
+      "run_id": "kimodo-center-profile-on-0",
+      "experiment_id": "t9-fixed-reference-smoke-20261007",
+      "config_id": "sha256:6826f1a852484e35819007fa189d0763a873dc61372cd3857d29cc4c5ca3b891",
+      "method": "kimodo",
+      "run_type": "not_final_smoke",
+      "case_id": "center",
+      "trial_index": 0,
+      "status": "completed",
+      "failure_reason": null,
+      "requirements": [
+        {
+          "scope": "initialization",
+          "stage": "controller_startup",
+          "clock": "perf_counter_ns",
+          "expected_count": 1
+        },
+        {
+          "scope": "control_step",
+          "stage": "loop_compute_total",
+          "clock": "perf_counter_ns",
+          "expected_count": 3240,
+          "frame_start": 0,
+          "frame_stride": 1
+        },
+        {
+          "scope": "episode",
+          "stage": "execution",
+          "clock": "perf_counter_ns",
+          "expected_count": 1
+        }
+      ]
+    }
+  ]
+}

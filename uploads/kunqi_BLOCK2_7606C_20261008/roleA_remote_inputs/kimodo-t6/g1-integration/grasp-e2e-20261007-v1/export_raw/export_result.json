@@ -1,0 +1,9 @@
+{
+  "status": "REFUSED_NONCANONICAL_FRAME_ZERO",
+  "playable": false,
+  "body_max_error_rad": 0.187088191509,
+  "root_max_error_m": 0.00433730008081,
+  "root_quat_max_error": 0.012316299546679437,
+  "hand_max_error_rad": 0.0,
+  "pass": false
+}

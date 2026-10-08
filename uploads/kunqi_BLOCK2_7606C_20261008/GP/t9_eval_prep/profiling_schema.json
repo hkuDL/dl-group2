@@ -1,0 +1,508 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:t9:profile-event:v0.3",
+  "title": "Task 9 profiling event v0.3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "method",
+    "run_type",
+    "case_id",
+    "trial_index",
+    "scope",
+    "stage",
+    "clock",
+    "start_ns",
+    "end_ns",
+    "duration_ms",
+    "deadline_ms",
+    "frame_index",
+    "process_id",
+    "thread_id",
+    "device",
+    "hardware_id",
+    "synchronized",
+    "profile_overhead_included",
+    "tags",
+    "event_id",
+    "experiment_id",
+    "config_id",
+    "accelerator",
+    "transport"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "t9_profile_event_v0.3"
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "method": {
+      "enum": [
+        "ardy",
+        "kimodo"
+      ]
+    },
+    "run_type": {
+      "enum": [
+        "not_final_smoke",
+        "pilot",
+        "formal"
+      ]
+    },
+    "case_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "trial_index": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "scope": {
+      "enum": [
+        "generation",
+        "candidate_preparation",
+        "initialization",
+        "control_step",
+        "episode",
+        "postprocess"
+      ]
+    },
+    "stage": {
+      "enum": [
+        "adapter",
+        "artifact_write",
+        "body_command_publish",
+        "body_pd",
+        "candidate_preparation_total",
+        "candidate_select",
+        "controller_init",
+        "controller_startup",
+        "dds_command_read",
+        "dds_state_publish",
+        "dds_state_publish_bundle",
+        "dds_state_read",
+        "encoder_infer",
+        "episode_total",
+        "execution",
+        "generation_total",
+        "grasp_evidence",
+        "hand_control",
+        "hand_pd",
+        "loop_compute_total",
+        "model_generate",
+        "model_load",
+        "mujoco_forward",
+        "mujoco_step",
+        "pacing_sleep",
+        "physical_evaluator",
+        "policy_infer",
+        "postprocess_total",
+        "process_start",
+        "prompt_parse",
+        "reference_export",
+        "reference_window",
+        "reset",
+        "scene_load",
+        "support_control",
+        "video_render",
+        "warmup"
+      ]
+    },
+    "clock": {
+      "enum": [
+        "steady_clock",
+        "perf_counter_ns",
+        "cuda_event",
+        "musa_event"
+      ]
+    },
+    "start_ns": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "end_ns": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "duration_ms": {
+      "type": "number",
+      "minimum": 0
+    },
+    "deadline_ms": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "exclusiveMinimum": 0
+    },
+    "frame_index": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "process_id": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "thread_id": {
+      "type": [
+        "integer",
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "device": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "hardware_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "synchronized": {
+      "type": "boolean"
+    },
+    "profile_overhead_included": {
+      "type": "boolean"
+    },
+    "accelerator": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "model": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "device_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true,
+          "description": "Stable physical device IDs, not only process-local musa:0."
+        },
+        "device_count": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "backend": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "execution_provider": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "dtype": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "warmup_runs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "shared_device": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "peak_memory_mb": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "utilization_percent": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100
+        }
+      },
+      "required": [
+        "model",
+        "device_ids",
+        "device_count",
+        "backend",
+        "execution_provider",
+        "dtype",
+        "warmup_runs",
+        "shared_device",
+        "peak_memory_mb",
+        "utilization_percent"
+      ]
+    },
+    "transport": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "dds",
+            "zmq",
+            "local",
+            "none"
+          ]
+        },
+        "topic": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "direction": {
+          "enum": [
+            "publish",
+            "receive",
+            "read",
+            "write",
+            "none"
+          ]
+        },
+        "command_received": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "new_command": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "reused_previous_command": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "missing_command": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "stale_command": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "command_age_ms": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "command_interval_ms": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "stale_threshold_ms": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": [
+        "kind",
+        "topic",
+        "direction",
+        "command_received",
+        "new_command",
+        "reused_previous_command",
+        "missing_command",
+        "stale_command",
+        "command_age_ms",
+        "command_interval_ms",
+        "stale_threshold_ms"
+      ]
+    },
+    "tags": {
+      "type": "object"
+    },
+    "event_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "experiment_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "config_id": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "clock": {
+            "enum": [
+              "perf_counter_ns",
+              "steady_clock"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "start_ns": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "end_ns": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "clock": {
+            "enum": [
+              "musa_event",
+              "cuda_event"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "synchronized": {
+            "const": true
+          },
+          "start_ns": {
+            "type": "null"
+          },
+          "end_ns": {
+            "type": "null"
+          },
+          "accelerator": {
+            "type": "object",
+            "properties": {
+              "device_count": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "device_ids": {
+                "type": "array",
+                "minItems": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "scope": {
+            "const": "control_step"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "frame_index": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "frame_index": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "stage": {
+            "const": "dds_command_read"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "transport": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "const": "dds"
+              },
+              "topic": {
+                "const": "rt/lowcmd"
+              },
+              "direction": {
+                "const": "read"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

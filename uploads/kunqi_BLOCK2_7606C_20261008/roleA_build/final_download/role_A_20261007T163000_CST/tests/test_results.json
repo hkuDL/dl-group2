@@ -1,0 +1,119 @@
+{
+  "scope": "Role A task/IK/hand planning; fresh Python process",
+  "passed": true,
+  "summary": {
+    "pass": 12,
+    "fail": 0,
+    "not_run": 2
+  },
+  "tests": [
+    {
+      "name": "task_schema",
+      "status": "pass",
+      "detail": true
+    },
+    {
+      "name": "array_shapes",
+      "status": "pass",
+      "detail": {
+        "source_timestamps": [
+          487
+        ],
+        "source_qpos": [
+          487,
+          36
+        ],
+        "canonical_wrist_world_pos": [
+          487,
+          2,
+          3
+        ],
+        "canonical_wrist_world_quat": [
+          487,
+          2,
+          4
+        ],
+        "timestamps": [
+          810
+        ],
+        "hand_ref_q": [
+          810,
+          14
+        ],
+        "hand_ref_dq": [
+          810,
+          14
+        ]
+      }
+    },
+    {
+      "name": "finite_arrays",
+      "status": "pass",
+      "detail": true
+    },
+    {
+      "name": "timestamp_monotonicity_and_exact_grid",
+      "status": "pass",
+      "detail": {
+        "source_end": 16.2,
+        "reference_end": 16.18
+      }
+    },
+    {
+      "name": "joint_names_and_order",
+      "status": "pass",
+      "detail": true
+    },
+    {
+      "name": "joint_limits",
+      "status": "pass",
+      "detail": "body29 and hand14 within canonical XML limits"
+    },
+    {
+      "name": "initial_state",
+      "status": "pass",
+      "detail": "root/body/hand frame zero matches canonical initial state"
+    },
+    {
+      "name": "ik_errors",
+      "status": "pass",
+      "detail": true
+    },
+    {
+      "name": "hand_timeline_alignment",
+      "status": "pass",
+      "detail": {
+        "first_motion_s": 8.02
+      }
+    },
+    {
+      "name": "pose_codec_fresh_process_save_reload",
+      "status": "pass",
+      "detail": {
+        "saved_matrix_roundtrip_max_error": 1.1920928955078125e-07,
+        "world_xyz_identity_mapping": false,
+        "coordinate_contract": "canonical_raw_qpos_to_verified_model_local_matrices_to_model_FK"
+      }
+    },
+    {
+      "name": "sha_verification",
+      "status": "pass",
+      "detail": "verified 11 protected inputs"
+    },
+    {
+      "name": "planning_metrics_contract",
+      "status": "pass",
+      "detail": true
+    },
+    {
+      "name": "real_kimodo_generation",
+      "status": "not_run",
+      "detail": "Role B responsibility"
+    },
+    {
+      "name": "sonic_physical_replay",
+      "status": "not_run",
+      "detail": "outside Role A; GPU/DDS prohibited"
+    }
+  ]
+}

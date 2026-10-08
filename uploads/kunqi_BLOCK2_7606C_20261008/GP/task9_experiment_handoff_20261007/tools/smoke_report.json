@@ -1,0 +1,89 @@
+{
+  "report_type": "t9_fixed_reference_profiling_smoke",
+  "report_version": "v1",
+  "run_type": "not_final_smoke",
+  "experiment_id": "t9-fixed-reference-smoke-20261007",
+  "server": "worker00038",
+  "container": "va-train",
+  "physical_gpu": 1,
+  "candidate": {
+    "source": "/workspace/group2/kimodo-t6/g1-integration/task8_development_20261007_v3/accepted_touch_allowed_profile",
+    "config_sha256": "6826f1a852484e35819007fa189d0763a873dc61372cd3857d29cc4c5ca3b891",
+    "reference_sha256": "640bc21a9f93cdd60f8e27a4f3b027d80652734bcef1ed631b8188abe25313c7",
+    "classification": "development_tuned_candidate"
+  },
+  "frozen_task_rule": {
+    "minimum_lift_m": 0.1,
+    "minimum_hold_s": 2.0,
+    "opposing_contact": "right thumb AND (right index OR right middle), force > 1e-4 N",
+    "no_cube_table_contact_during_hold": true,
+    "no_fall": true,
+    "no_weld_or_external_force_or_teleport": true,
+    "robot_table_contact": "diagnostic_only"
+  },
+  "profile_off": {
+    "physical_success": true,
+    "expert_valid": true,
+    "max_lift_m": 0.12462098555965984,
+    "final_lift_m": 0.10280402882724138,
+    "max_continuous_hold_seconds": 4.729999999999921,
+    "recorded_frames": 810,
+    "recorded_playback_physics_steps": 3239,
+    "robot_table_contact_steps": 9,
+    "fall_steps": 0,
+    "body_tracking_rmse_rad": 0.1403109904955385,
+    "replay_wall_seconds": 16.19516292400658,
+    "sonic_initialization_wall_seconds": 36.8315781080164
+  },
+  "profile_on": {
+    "physical_success": true,
+    "expert_valid": true,
+    "max_lift_m": 0.12520168604553378,
+    "final_lift_m": 0.10308268184258551,
+    "max_continuous_hold_seconds": 4.734999999999921,
+    "recorded_frames": 810,
+    "recorded_playback_physics_steps": 3240,
+    "robot_table_contact_steps": 8,
+    "fall_steps": 0,
+    "body_tracking_rmse_rad": 0.14033866607248347,
+    "replay_wall_seconds": 16.200604453042615,
+    "sonic_initialization_wall_seconds": 36.846607157099526,
+    "profile_event_count": 3242,
+    "coverage_status": "pass",
+    "loop_compute_total": {
+      "event_count": 3240,
+      "mean_ms": 3.2779516333333333,
+      "p50_ms": 3.239879,
+      "p95_ms": 3.631457,
+      "p99_ms": 3.789642,
+      "max_ms": 4.446133,
+      "deadline_ms": 5.0,
+      "deadline_misses": 0
+    }
+  },
+  "comparison": {
+    "same_reference_sha256": true,
+    "same_task_outcome": true,
+    "same_frame_coverage_810": true,
+    "replay_wall_delta_seconds": 0.005441529036035,
+    "max_lift_delta_m": 0.00058070048587394,
+    "hold_delta_seconds": 0.005,
+    "body_tracking_rmse_delta_rad": 0.00002767557694497,
+    "bitwise_deterministic": false,
+    "interpretation": "No material outcome or timing regression was observed. Small contact/step differences remain and must be treated as runtime jitter, not method performance."
+  },
+  "manifest_history": {
+    "v1_status": "failed_and_retained",
+    "v1_problem": "expected 3239 loop events but observed 3240",
+    "v2_status": "pass",
+    "v2_correction": "planned control steps are 810 reference frames * 4 physics steps = 3240",
+    "formal_evidence": false
+  },
+  "limitations": [
+    "This is a Kimodo-only fixed-reference smoke, not an ARDY/Kimodo comparison.",
+    "The candidate was development-tuned before freezing.",
+    "Only controller startup, full execution, and buffered loop_compute_total were profiled.",
+    "DDS receive age, GPU kernel timing, generation, adapter, and full resource sampling remain to be integrated.",
+    "Robot-table contact is diagnostic-only under the user-frozen rule."
+  ]
+}

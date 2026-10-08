@@ -1,0 +1,137 @@
+{
+  "record_schema": "t9_not_final_smoke_v0.1",
+  "record_status": "evidence_only",
+  "formal_score": false,
+  "method": "kimodo",
+  "pipeline_label": "Kimodo + dense expert constraints + G1 projection + independent hand controller + SONIC",
+  "run_type": "not_final_smoke",
+  "task": "grasp_and_lift",
+  "case_id": "fixed_center_left",
+  "object_pose": {
+    "position_xyz_m": [
+      0.39,
+      0.15,
+      0.785
+    ],
+    "quaternion_wxyz": null
+  },
+  "grasp_arm": "left",
+  "instruction": "A robot reaches forward with its left hand, grasps a small cube on a table and lifts it while standing still.",
+  "seed": 42,
+  "generation": {
+    "model": "Kimodo-G1-RP-v1",
+    "kimodo_revision": "58e781898b3d7e328a676a75d3e338c45dce3ad9",
+    "integration_revision": "7e47fc6b2522b7754e64ee357e7244a117d7be84",
+    "integration_code_dirty": false,
+    "generation_host_class": "H100",
+    "exact_gpu_model": null,
+    "num_samples_generated": 3,
+    "selected_sample_index": 0,
+    "selection_policy": null,
+    "retry_count": null,
+    "total_generation_time_s": 112.64876556396484,
+    "raw_npz_sha256": "3403780c3914660f1ad1aff1d9d897205a75af7c735017c24bd738cfb26d8344",
+    "qpos_csv_sha256": "0d247289b122804c3e41d20560c39db9571ef1748588542b213a93a7b09aa8f9"
+  },
+  "input_assistance": {
+    "uses_expert_constraints": true,
+    "constraint_mode": "dense",
+    "constraint_source": "validated expert-derived end-effector poses",
+    "fullbody_constraint_frames": [
+      0,
+      299
+    ],
+    "end_effector_constraint_count_per_limb": 298,
+    "constraint_bundle_sha256": "48eadd6fae9129a63a751ab59fefbd8bce3e61d421a48a0692de29d61755d040",
+    "g1_projection_targets_sha256": "b69ca45a8d362b6bc89ac7f0d87a96973a6d4e36aa82348af0020c16c974120c",
+    "projection_joint_change_rmse_rad": 0.2998151729907609,
+    "hand_reference_source": "validated independent controller"
+  },
+  "execution": {
+    "controller": "SONIC",
+    "expected_frames": 798,
+    "recorded_frames": 798,
+    "frame_coverage_complete": true,
+    "physics_hz": 200,
+    "physical_duration_seconds": 15.940000000001568,
+    "hand_synchronized": true,
+    "fall": false,
+    "cube_attached": false,
+    "cube_teleported_during_rollout": false,
+    "body_reference_rmse_rad": 0.21860429265412773
+  },
+  "metrics": {
+    "max_lift_m": 0.1320513916573618,
+    "final_lift_m": 0.11576500192737993,
+    "max_continuous_hold_seconds": 4.30999999999993,
+    "final_continuous_hold_seconds": 4.30999999999993
+  },
+  "contacts": {
+    "robot_table_contact_steps": 174,
+    "robot_table_contact_bodies": [
+      "left_hand_thumb_2_link"
+    ],
+    "robot_self_contact_steps": 0,
+    "left_arm_environment_contact_steps": 1627,
+    "right_arm_environment_contact_steps": 0,
+    "final_cube_contacts": [
+      {
+        "body": "left_hand_thumb_2_link",
+        "force_n": 17.606492480190127
+      },
+      {
+        "body": "left_hand_middle_1_link",
+        "force_n": 16.30611366348223
+      }
+    ]
+  },
+  "criterion": {
+    "lift_threshold_m": 0.1,
+    "continuous_hold_threshold_seconds": 2.0,
+    "requires_opposing_finger_contacts": true,
+    "requires_no_cube_table_contact_during_hold": true,
+    "requires_complete_finite_synchronized_rollout": true,
+    "requires_no_fall": true,
+    "forbids_attachment": true,
+    "forbids_teleport": true,
+    "robot_table_contact_policy": null
+  },
+  "outcome": {
+    "task_success": true,
+    "collision": true,
+    "safety_success": null,
+    "formal_eligible": false,
+    "source_physical_success": false,
+    "physical_execution_success": true
+  },
+  "open_questions": [
+    "What selection policy chose sample 0 from the three generated motions?",
+    "Are retries allowed in formal evaluation?",
+    "What does source_physical_success=false mean relative to expert_valid=true?",
+    "Does any robot-table contact fail the safety criterion?",
+    "Will ARDY receive the same dense expert constraints and independent hand reference?"
+  ],
+  "evidence_files": [
+    {
+      "name": "pipeline.png",
+      "sha256": "4B9653BF8A917D46C4E76BE2A9D5CE38C1406875337FD443B4F00D82688969BF"
+    },
+    {
+      "name": "report.json",
+      "sha256": "729F3D1D7DCD5E02C35B646CC4BED5F7B727C7E872725E5812F1BA21B93F042C"
+    },
+    {
+      "name": "run_generation.txt",
+      "sha256": "9665A4C101A5C4618E0B0D09ACEEAA11E5541357D5EF7ACE9AE9CC0738799CBD"
+    },
+    {
+      "name": "演示说明.md",
+      "sha256": "68668F1C66023B900AB9F67AE763B4D1FB321C508BA7A1E0AB68682FC447BBDA"
+    }
+  ],
+  "notes": [
+    "This record preserves a fixed-scene integration smoke result only and must not enter Task 9 formal aggregates.",
+    "The successful execution used dense expert-derived constraints, G1 projection, and an independent hand controller; it is not a plain language-only Kimodo result.",
+    "Generation timing was measured on an H100-class host and is not directly comparable with ARDY timing on S4000 hardware."
+  ]
+}

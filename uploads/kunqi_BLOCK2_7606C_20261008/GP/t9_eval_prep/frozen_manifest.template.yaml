@@ -1,0 +1,115 @@
+# Task 9 shared evaluation manifest template.
+# Keep status=draft and allow_formal_runs=false until every required value is
+# verified from the live shared environment and approved by the group.
+
+manifest_schema_version: t9_manifest_v0.1
+protocol_version: t9_eval_v0.3
+status: draft
+allow_formal_runs: false
+frozen_at_utc: null
+approved_by: null
+pending_decisions:
+  - D-01
+  - D-02
+  - D-04
+  - D-06
+  - D-07
+  - D-08
+  - D-09
+  - D-10
+  - D-11
+
+task:
+  task_id: grasp_and_lift
+  place_enabled: false
+
+source_snapshot:
+  repository_url: null
+  branch_or_tag: null
+  commit_sha: null
+  dirty_worktree: null
+  dirty_diff_sha256: null
+  source_archive_sha256: null
+  container_digest: null
+
+shared_runtime:
+  execution_host: null
+  execution_accelerator: null
+  runtime_versions: null
+  robot_model_path: null
+  robot_model_sha256: null
+  initial_pose_definition: null
+  initial_pose_sha256: null
+  reset_definition: null
+  reset_sha256: null
+  scene_config_path: null
+  scene_config_sha256: null
+  sonic_revision: null
+  sonic_config_path: null
+  sonic_config_sha256: null
+  hand_pd_revision: null
+  hand_pd_config_path: null
+  hand_pd_kp: null
+  hand_pd_kd: null
+  hand_pd_rate_hz: null
+  hand_pd_config_sha256: null
+  evaluator_path: null
+  evaluator_sha256: null
+
+methods:
+  ardy:
+    generator_revision: null
+    checkpoint_id_or_path: null
+    checkpoint_sha256: null
+    adapter_revision: null
+    adapter_sha256: null
+    adapter_entrypoint: null
+    generation_environment: null
+  kimodo:
+    generator_revision: null
+    checkpoint_id_or_path: null
+    checkpoint_sha256: null
+    adapter_revision: null
+    adapter_sha256: null
+    adapter_entrypoint: null
+    generation_environment: null
+
+input_contract:
+  instruction_set: null
+  grasp_arm_policy: null
+  conditioning_regime: null
+  allowed_external_inputs: null
+  input_spec_sha256: null
+  candidate_budget: null
+  selection_policy: null
+  retry_policy: null
+  retry_budget: null
+  generation_timeout_seconds: null
+  execution_timeout_seconds: null
+
+cases: null
+
+trial_policy:
+  trials_per_method_case: null
+  seed_list: null
+  pairing_rule: null
+  ordering_strategy: null
+  ordering_seed: null
+
+criteria:
+  minimum_lift_m: null
+  minimum_continuous_hold_seconds: null
+  requires_opposing_contacts: null
+  requires_no_cube_table_contact_during_hold: null
+  robot_table_contact_policy: diagnostic_only_not_automatic_failure
+  requires_no_fall: null
+  joint_limit_policy: null
+  forbids_attachment: true
+  forbids_teleport: true
+  requires_complete_synchronized_rollout: null
+
+artifacts:
+  output_root: null
+  required_artifact_types: null
+  video_policy: null
+  log_policy: null

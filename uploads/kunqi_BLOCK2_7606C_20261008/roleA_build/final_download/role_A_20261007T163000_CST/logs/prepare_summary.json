@@ -1,0 +1,10 @@
+{
+  "task_id": "kimodo_center_right_seed0_role_a_20261007T163000_CST",
+  "status": "ready_for_integration",
+  "output": "/workspace/group2/handoffs/kimodo_parallel/role_A_20261007T163000_CST/artifacts",
+  "source_frames": 487,
+  "reference_frames": 810,
+  "constraint_count": 83,
+  "max_position_error_m": 9.797385744713843e-06,
+  "max_orientation_error_rad": 1.160550802235461e-05
+}

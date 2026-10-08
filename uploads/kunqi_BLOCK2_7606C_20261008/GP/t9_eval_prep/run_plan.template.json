@@ -1,0 +1,16 @@
+{
+  "plan_schema_version": "t9_run_plan_v0.1",
+  "protocol_version": "t9_eval_v0.3",
+  "status": "template",
+  "run_type": null,
+  "manifest_path": "frozen_manifest.yaml",
+  "manifest_sha256": null,
+  "batch_id": null,
+  "created_at_utc": null,
+  "locked_at_utc": null,
+  "ordering": {
+    "strategy": null,
+    "random_seed": null
+  },
+  "runs": []
+}

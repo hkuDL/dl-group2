@@ -1,0 +1,51 @@
+{
+  "contract": "kimodo_grasp_final_v1_20261007",
+  "generated_at_cst": "2026-10-07",
+  "remote_root": "/workspace/group2/handoffs/kimodo_parallel_v2",
+  "overall_status": "final_integration_executed",
+  "final_grasp_status": "failed_pre_playback_initialization_instability",
+  "physical_success": false,
+  "expert_valid": false,
+  "roles": {
+    "A": {
+      "status": "ready_for_final_integration",
+      "remote_directory": "/workspace/group2/handoffs/kimodo_parallel_v2/role_A_20261007T165900_CST",
+      "tests_passed": 15,
+      "tests_failed": 0
+    },
+    "B": {
+      "status": "ready_for_final_integration",
+      "remote_directory": "/workspace/group2/handoffs/kimodo_parallel_v2/role_B_20261007T170600_CST",
+      "tests_passed": 20,
+      "tests_failed": 0,
+      "real_model_fixture_run": true,
+      "final_grasp_run": false
+    },
+    "C": {
+      "status": "ready_for_final_integration",
+      "remote_directory": "/workspace/group2/handoffs/kimodo_parallel_v2/role_C_20261007T172000_CST",
+      "tests_passed": 24,
+      "tests_failed": 0,
+      "final_replay_run": false
+    }
+  },
+  "final_run": {
+    "remote_directory": "/workspace/group2/handoffs/kimodo_parallel_v2/final_integration_20261007T174100_CST",
+    "real_model_run": true,
+    "final_grasp_run": true,
+    "s4000_physical_gpu": 1,
+    "generated_frames": 487,
+    "generated_duration_seconds": 16.2,
+    "inference_seconds": 34.46114263101481,
+    "generation_total_wall_seconds": 55.15628255001502,
+    "sonic_reference_frames": 810,
+    "runner_exit_code": 2,
+    "evidence_rows": 273,
+    "simulation_end_seconds": 1.3649999999999929,
+    "actual_playing_duration_seconds": 0.0,
+    "max_cube_lift_m": 0.09418982638254603,
+    "longest_qualifying_hold_seconds": 0.0,
+    "failure": "MuJoCo QACC instability at DOF 0 before SONIC playback began"
+  },
+  "next_step": "Diagnose pre-playback initialization stability and generated-motion discontinuity; do not silently retry the formal single-shot run"
+}
