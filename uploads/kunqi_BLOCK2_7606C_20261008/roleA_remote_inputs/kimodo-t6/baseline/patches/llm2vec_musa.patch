@@ -1,0 +1,32 @@
+diff --git a/kimodo/model/llm2vec/llm2vec.py b/kimodo/model/llm2vec/llm2vec.py
+--- a/kimodo/model/llm2vec/llm2vec.py
++++ b/kimodo/model/llm2vec/llm2vec.py
+@@ -133,5 +133,17 @@
+         model_class = cls._get_model_class(config_class_name, enable_bidirectional=enable_bidirectional)
+-
+-
+-        model = model_class.from_pretrained(base_model_name_or_path, **kwargs)
++
++
++        # If base_model_name_or_path is a PEFT adapter directory,
++        # load the actual base model referenced by adapter_config.json first.
++        actual_base_model_name_or_path = base_model_name_or_path
++        adapter_base_model_name_or_path = None
++        adapter_config_path = os.path.join(base_model_name_or_path, "adapter_config.json")
++        if os.path.exists(adapter_config_path):
++            with open(adapter_config_path, "r") as fIn:
++                adapter_config_dict = json.load(fIn)
++            adapter_base_model_name_or_path = adapter_config_dict.get("base_model_name_or_path")
++            if adapter_base_model_name_or_path:
++                actual_base_model_name_or_path = adapter_base_model_name_or_path
++
++        model = model_class.from_pretrained(actual_base_model_name_or_path, **kwargs)
++
+         if os.path.isdir(base_model_name_or_path) and os.path.exists(f"{base_model_name_or_path}/config.json"):
+@@ -351,4 +363,4 @@
+         sentences_sorted = [sentences[idx] for idx in length_sorted_idx]
+         all_embeddings = []
+-
+-        if torch.cuda.device_count() <= 1:
++
++        if torch.cuda.device_count() <= 1 or str(device).startswith("musa"):
