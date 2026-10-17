@@ -1,0 +1,6 @@
+# Example keys only. Values must come from the robot owner; do not use guesses.
+body_step_limit_rad: null
+hand_step_limit_rad: null
+approved_joint_order: null
+operator_acknowledged: false
+

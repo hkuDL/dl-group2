@@ -1,0 +1,11 @@
+batch_size: 1
+checkpoints_dir: models
+model: ARDY-G1-RP-25FPS-Horizon52
+prompt: A standing person slowly reaches forward with the right hand.
+duration_s: 5.0
+diffusion_steps: 10
+cfg_weight: [2.0, 2.0]
+history_frames: null
+# Optional portable ARDY constraints JSON; keep null for prompt-only inference.
+constraints_file: null
+

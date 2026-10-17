@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "g1-sonic-deployment"
+version = "0.1.0"
+description = "Replay-first G1 deployment adapters for Kimodo, ARDY, VA and SONIC"
+requires-python = ">=3.9"
+dependencies = [
+  "numpy>=1.24,<3",
+  "PyYAML>=6,<7",
+  "pyzmq>=25,<28",
+]
+
+[project.optional-dependencies]
+inference = [
+  "torch>=2.2",
+  "Pillow>=10",
+]
+test = ["pytest>=7,<9"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.setuptools.packages.find]
+include = ["contracts*", "adapters*", "communication*", "inference*"]
+
