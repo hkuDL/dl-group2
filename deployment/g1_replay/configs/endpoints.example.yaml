@@ -1,0 +1,5 @@
+# Copy to a local ignored site file and replace placeholders there.
+publisher_bind: tcp://127.0.0.1:5556
+sonic_topic: pose
+transport: packed_zmq_tcp
+

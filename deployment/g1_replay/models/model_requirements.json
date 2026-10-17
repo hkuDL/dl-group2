@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "weights": [
+    {
+      "model": "kimodo",
+      "filename": "model.safetensors",
+      "size_bytes": 1134168268,
+      "sha256": "e18c1de73e2ce17a107b06d85155fbbc5debe68eb35455aa5b033e6ddbe056a5",
+      "install_path": "models/Kimodo-G1-RP-v1/model.safetensors",
+      "git_policy": "never_commit"
+    },
+    {
+      "model": "ardy_denoiser",
+      "filename": "denoiser.safetensors",
+      "size_bytes": 631581872,
+      "sha256": "0c16ac26c1ab75e511cd24bb25bd9ad92078a2460b4ce78529788b5da22647a2",
+      "install_path": "models/ARDY-G1-RP-25FPS-Horizon52/denoiser.safetensors",
+      "git_policy": "never_commit"
+    },
+    {
+      "model": "ardy_tokenizer",
+      "filename": "tokenizer.safetensors",
+      "size_bytes": 143166728,
+      "sha256": "6f2f75f738b8d6fb1b196d3253c7accc90494b9c12669b35968425fef54c8896",
+      "install_path": "models/ARDY-G1-RP-25FPS-Horizon52/tokenizer.safetensors",
+      "git_policy": "never_commit"
+    },
+    {
+      "model": "va_v4_1",
+      "filename": "checkpoint_compat.pt",
+      "size_bytes": 14040690,
+      "sha256": "f78969b9bafe1c1c2e7da4b72616fc47e058acd71e5c44f29cce800a27326cc4",
+      "install_path": "models/va_v4_1/checkpoint_compat.pt",
+      "git_policy": "never_commit"
+    }
+  ],
+  "support_files": [
+    {"model":"kimodo","install_path":"models/Kimodo-G1-RP-v1/config.yaml","sha256":"73b550ba606d69847725ee257d5d99fa5cd56bd8bac320dbe5c2a49f0873846c","git_policy":"never_commit"},
+    {"model":"kimodo","install_path":"models/Kimodo-G1-RP-v1/stats/motion/body/mean.npy","sha256":"185564a7246ee03d7a7aa2a16b3c7e49cffd5a858f637ab2b8fa04574f18d29b","git_policy":"never_commit"},
+    {"model":"kimodo","install_path":"models/Kimodo-G1-RP-v1/stats/motion/body/std.npy","sha256":"5df7b200de9bdb0d92cf23cd1426d2ded6c7688d1dcb6e403c3886f1d130f59e","git_policy":"never_commit"},
+    {"model":"kimodo","install_path":"models/Kimodo-G1-RP-v1/stats/motion/global_root/mean.npy","sha256":"c292f97ed86266332abdbb7e98d464eb91115a4ec1def3c87aa9362ae483b062","git_policy":"never_commit"},
+    {"model":"kimodo","install_path":"models/Kimodo-G1-RP-v1/stats/motion/global_root/std.npy","sha256":"691f1ada7ac34f4854d8d5920cafb26fd22f1d5fb9dbc331030292eb6675c6eb","git_policy":"never_commit"},
+    {"model":"kimodo","install_path":"models/Kimodo-G1-RP-v1/stats/motion/local_root/mean.npy","sha256":"b0aab16477bd39f03934bb930786526563b6e5955d1ee0b2face7d1e2c04bba8","git_policy":"never_commit"},
+    {"model":"kimodo","install_path":"models/Kimodo-G1-RP-v1/stats/motion/local_root/std.npy","sha256":"9b8f34564fda07cffb5689b2f509b6864b4031a764ca53bfa149ce8487495c62","git_policy":"never_commit"},
+    {"model":"ardy","install_path":"models/ARDY-G1-RP-25FPS-Horizon52/config.yaml","sha256":"d34bcd2a43e5bade030e2779bd11e0c3d8ce7eeea6b636e7504efe9a404ec757","git_policy":"never_commit"},
+    {"model":"ardy","install_path":"models/ARDY-G1-RP-25FPS-Horizon52/stats/motion/mean.npy","sha256":"b6d2c72548475e9c82a80899429c955840796a06a82c88e646e7a0125f997407","git_policy":"never_commit"},
+    {"model":"ardy","install_path":"models/ARDY-G1-RP-25FPS-Horizon52/stats/motion/std.npy","sha256":"ee6069988035de4339b44fd229f169456d4bd86671fc4dbcfd293c4d41caa1a8","git_policy":"never_commit"},
+    {"model":"ardy","install_path":"models/ARDY-G1-RP-25FPS-Horizon52/stats/post_quantization/mean.npy","sha256":"78d5bbd3d22ca1866770a370f0fb9da15663cbbc63a0b8851f124dae78a2f8c0","git_policy":"never_commit"},
+    {"model":"ardy","install_path":"models/ARDY-G1-RP-25FPS-Horizon52/stats/post_quantization/std.npy","sha256":"289d21ca46aa8300cd213993a64efbd03d35440178de19b38cc8ee76d69499a1","git_policy":"never_commit"},
+    {"model":"ardy","install_path":"models/ARDY-G1-RP-25FPS-Horizon52/stats/pre_quantization/mean.npy","sha256":"14bf165f6cf79276bc45ea24d6101f320b9007854b2ddb86babdd057af287a8c","git_policy":"never_commit"},
+    {"model":"ardy","install_path":"models/ARDY-G1-RP-25FPS-Horizon52/stats/pre_quantization/std.npy","sha256":"413dbb9b736a41d033a5c0dbd0a632970b0e23737f39dd8eb0e859fe7a7e9556","git_policy":"never_commit"}
+  ]
+}
+

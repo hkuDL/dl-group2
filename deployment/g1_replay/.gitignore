@@ -1,0 +1,70 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.credentials*
+secrets/
+
+# Model checkpoints and compiled runtimes
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.onnx
+*.engine
+*.plan
+*.so
+checkpoints/
+weights/
+
+# Research/training data and generated artifacts
+datasets/
+data/
+videos/
+logs/
+outputs/
+results/
+runs/
+wandb/
+*.mp4
+*.avi
+*.bag
+*.mcap
+
+# References are denied by default. Only the reviewed integration fixture is allowed.
+*.npz
+!test_reference/golden_ardy/reference.npz
+
+# Archives and native build output
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+build/
+dist/
+*.egg-info/
+
+# ROS/DDS/local runtime state
+log/
+install/
+.ros/
+cyclonedds*.xml
+fastdds*.xml
+
+# Editors and OS
+.DS_Store
+.idea/
+.vscode/
+

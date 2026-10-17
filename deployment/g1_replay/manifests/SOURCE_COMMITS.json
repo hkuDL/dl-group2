@@ -1,0 +1,32 @@
+{
+  "inventory_date": "2026-10-17",
+  "inventory_host": "S4000 group2 (worker00038)",
+  "ardy": {
+    "origin": "https://github.com/nv-tlabs/ardy.git",
+    "commit": "693f74d13b3d04a0a22ce127ee79c929dd89756b",
+    "license": "Apache-2.0"
+  },
+  "kimodo": {
+    "source_snapshot": "kimodo-t6/g1-integration/kimodo-upload",
+    "commit": null,
+    "reason_commit_missing": "The inspected snapshot is not a Git checkout.",
+    "license": "Apache-2.0",
+    "model_license": "NVIDIA Open Model License"
+  },
+  "sonic": {
+    "origin": "https://github.com/NVlabs/GR00T-WholeBodyControl.git",
+    "commit": "39ea4bc6feffc72a752dff3766e38edd910524f1",
+    "base_commit": "b042411fae38ee4d1af9aac82a37a1f8d14d6dd0",
+    "result_tree": "606f1101ff1aa03b5b498842f520499b225d475b",
+    "remote_contains_commit": false,
+    "license": "Apache-2.0",
+    "model_license": "NVIDIA Open Model License"
+  },
+  "va": {
+    "source_snapshot": "va_research",
+    "commit": null,
+    "reason_commit_missing": "The inspected research snapshot has no independently established publishable commit.",
+    "license": "publication_review_required"
+  }
+}
+

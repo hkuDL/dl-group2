@@ -1,0 +1,5 @@
+batch_size: 1
+checkpoint: models/va_v4_1/checkpoint_compat.pt
+input_npz: inputs/va_input.npz
+v41: true
+

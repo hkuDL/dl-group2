@@ -1,0 +1,22 @@
+{
+  "producer_type": "ardy",
+  "task_arm": "right",
+  "case": {
+    "id": "center",
+    "block_xy": [
+      0.4,
+      -0.15
+    ],
+    "block_yaw_deg": 0
+  },
+  "source_attempt": "outputs/canonical_production/ardy/ardy_fresh_20261016_01/artifact",
+  "source_reference_path": "outputs/canonical_production/ardy/ardy_fresh_20261016_01/artifact/replay/input_reference.npz",
+  "source_reference_sha256": "390ea629b36913ed4e9c2c0f8695e8b0f07e9c13bbf4d3f5b923f448aa4b673b",
+  "source_generation": "outputs/canonical_production/ardy/ardy_fresh_20261016_01/artifact/source/generation.json",
+  "source_generation_sha256": "894f52b376f1129a202613684d6b729c1f9f7f08234797924622076f510b03cb",
+  "adaptation": "outputs/canonical_production/ardy/ardy_fresh_20261016_01/artifact/candidate/adaptation.json",
+  "adaptation_sha256": "008de4700161b80ec3d1f4905b61850eb0a9f9f48199a2a73e8b42079c467e92",
+  "producer_replay": "outputs/canonical_production/ardy/ardy_fresh_20261016_01/artifact/replay/result.json",
+  "producer_replay_result_sha256": "87821170a005694a7c13c7167865e8470cda0bd751638d523b8b5d32ff6b00df",
+  "canonicalization": "Selected required canonical arrays from fresh ARDY generation/adaptation/native qualification; no trajectory translation or retiming."
+}

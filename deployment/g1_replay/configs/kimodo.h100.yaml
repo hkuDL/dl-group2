@@ -1,0 +1,10 @@
+batch_size: 1
+checkpoints_dir: models
+prompt: A standing person slowly reaches forward with the right hand.
+duration_s: 5.0
+diffusion_steps: 100
+cfg_weight: [2.0, 2.0]
+text_encoder_mode: local
+# Optional portable Kimodo constraints JSON; keep null for prompt-only inference.
+constraints_file: null
+
