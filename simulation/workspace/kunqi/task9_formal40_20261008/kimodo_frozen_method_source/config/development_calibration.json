@@ -1,0 +1,43 @@
+{
+  "task_id": "kimodo-center-seed1-16p2-v1",
+  "kind": "development_own_replay_tracking_compensation",
+  "source_run": "/workspace/group2/kimodo-t6/g1-integration/task8_development_20261007_v3/run_01/qualification/replay",
+  "ardy_grasp_information_used": false,
+  "windows_s": {
+    "close": [
+      7.5,
+      8.5
+    ],
+    "hold": [
+      12,
+      16.18
+    ]
+  },
+  "estimator": "median(actual wrist FK minus reference wrist FK), world-frame rotation log; hold rotation clipped to 0.28rad",
+  "close_position_bias_m": [
+    0.023927699346941167,
+    -0.016561616060487616,
+    -0.001985520616349934
+  ],
+  "close_rotation_bias_rad": [
+    0.07696507282910939,
+    0.06863542546589523,
+    0.13250897318520263
+  ],
+  "hold_position_bias_m": [
+    0.038191997567151775,
+    -0.001995515419672439,
+    -0.0035177151763445824
+  ],
+  "hold_rotation_bias_rad": [
+    -0.1637557855023969,
+    -0.06336347188455603,
+    0.21810344597284126
+  ],
+  "source_hashes": {
+    "/workspace/group2/kimodo-t6/g1-integration/task8_development_20261007_v3/run_01/qualification/replay/simulation.npz": "631717aeb9ce9511e9be54f0370842abf757d61fb84b52bf3955d963010cc466",
+    "/workspace/group2/kimodo-t6/g1-integration/task8_development_20261007_v3/run_01/qualification/replay/input_reference.npz": "4a070808c6ba5b4e04cae13ea2181d44a525fe66c5c77cd0f69f3394d1ac423e",
+    "/workspace/group2/kimodo-t6/g1-integration/task8_development_20261007_v3/run_01/qualification/replay/provenance.json": "2381f3a7d7296453411ba9b964f0b641556f4bd83dd04fa4ca658dbeaa168eb0"
+  },
+  "transfer_note": "Reused fixed wrist bias measured in run_01 seed0; no new tuning or candidate selection; development stability probe only."
+}

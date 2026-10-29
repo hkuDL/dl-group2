@@ -1,6 +1,14 @@
 # dl-group2
 DASC7606C Track 4 Unitree G1 文本驱动桌面抓取项目
 
+**代码入口（2026-10-29 更新）**
+
+- [simulation/](simulation/README.md)：从 S4000 恢复的五阶段生成、G1/手部适配、SONIC/MuJoCo、数据工厂、VLM 和 VA 研究源码。
+- [报告与代码对照](simulation/docs/REPORT_CODE_MAP.md)：已找到的实现、来源与尚未核验的复现缺口。
+- [deployment/g1_replay/](deployment/g1_replay/README.md)：独立的无仿真推理与 reference 发送包。
+
+研究源码恢复与轻量测试不等于重新完成 GPU、仿真或真机实验。新增目录只包含源码、小型运行配置、来源清单和文本补丁；模型权重、数据集、视频、日志、环境与 native binaries 均不提交。
+
 **项目目标**
 本项目研究如何使用自然语言指令控制 Unitree G1 人形机器人，在仿真环境中完成桌面方块的伸手、抓取和抬起。
 核心系统需要比较两种不同的运动生成方法——ARDY 与 Kimodo。两种方法必须使用：

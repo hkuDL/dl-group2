@@ -1,0 +1,359 @@
+diff --git a/gear_sonic_deploy/CMakeLists.txt b/gear_sonic_deploy/CMakeLists.txt
+index 454c54c39791d54ad53a02ce19002f8bad7a1a16..d640e520ad3c6a824cca5f218605aca635677c19 100644
+--- a/gear_sonic_deploy/CMakeLists.txt
++++ b/gear_sonic_deploy/CMakeLists.txt
+@@ -15,6 +15,12 @@ message(STATUS "C++ Compiler: ${CMAKE_CXX_COMPILER}")
+ message(STATUS "C++ Compiler ID: ${CMAKE_CXX_COMPILER_ID}")
+ message(STATUS "C++ Compiler Version: ${CMAKE_CXX_COMPILER_VERSION}")
+ 
++option(SONIC_MUSA "Build existing replay controller with Torch/MUSA inference" OFF)
++if(SONIC_MUSA)
++  include(cmake/MusaController.cmake)
++  return()
++endif()
++
+ # Library target
+ add_library(${PROJECT_NAME} INTERFACE)
+ 
+diff --git a/gear_sonic_deploy/cmake/MusaController.cmake b/gear_sonic_deploy/cmake/MusaController.cmake
+new file mode 100644
+index 0000000000000000000000000000000000000000..61591306525f725e75b2af493e0e52e61eb77f52
+--- /dev/null
++++ b/gear_sonic_deploy/cmake/MusaController.cmake
+@@ -0,0 +1,22 @@
++# Alternate build of the original controller; no TensorRT/CUDA dependencies.
++find_package(Python3 3.10 REQUIRED COMPONENTS Development.Embed)
++find_package(Threads REQUIRED)
++find_package(ZLIB REQUIRED)
++find_package(Eigen3 REQUIRED)
++find_package(yaml-cpp REQUIRED)
++find_library(ZMQ_LIBRARY zmq REQUIRED)
++set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
++add_subdirectory(thirdparty/unitree_sdk2)
++add_subdirectory(src/audio_thread)
++set(SONIC_CONTROLLER_DIR ${PROJECT_SOURCE_DIR}/src/g1/g1_deploy_onnx_ref)
++file(GLOB SONIC_CONTROLLER_SRCS ${SONIC_CONTROLLER_DIR}/src/*.cpp)
++add_executable(g1_deploy_onnx_ref ${SONIC_CONTROLLER_SRCS})
++target_compile_definitions(g1_deploy_onnx_ref PRIVATE SONIC_MUSA=1 HAS_ROS2=0
++  SONIC_MUSA_PYTHON_DIR="${PROJECT_SOURCE_DIR}/scripts")
++target_include_directories(g1_deploy_onnx_ref PRIVATE
++  ${SONIC_CONTROLLER_DIR}/include ${PROJECT_SOURCE_DIR}/src ${EIGEN3_INCLUDE_DIR})
++target_link_libraries(g1_deploy_onnx_ref PRIVATE unitree_sdk2 audio_thread
++  ZLIB::ZLIB Python3::Python yaml-cpp ${ZMQ_LIBRARY} Threads::Threads)
++set_target_properties(g1_deploy_onnx_ref PROPERTIES
++  RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/target/release"
++  CXX_STANDARD 20 CXX_STANDARD_REQUIRED ON CXX_EXTENSIONS OFF)
+diff --git a/gear_sonic_deploy/scripts/musa_onnx.py b/gear_sonic_deploy/scripts/musa_onnx.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..75bce2cc2c970eac2ee0631e73bcba8ea74ed22a
+--- /dev/null
++++ b/gear_sonic_deploy/scripts/musa_onnx.py
+@@ -0,0 +1,117 @@
++"""Exact SONIC ONNX graph execution on Torch/MUSA; native controller owns I/O semantics."""
++import warnings
++from pathlib import Path
++import numpy as np
++import onnx
++from onnx import numpy_helper, helper
++import torch
++import torch_musa
++DTYPES={1:torch.float32,6:torch.int32,7:torch.int64,9:torch.bool,10:torch.float16,11:torch.float64}
++def values(x):return x.cpu().reshape(-1).tolist()
++def execute(model, initializers, tensor):
++ env=dict(initializers)
++ env[model.graph.input[0].name]=tensor
++ for node in model.graph.node:
++  a={x.name:helper.get_attribute_value(x) for x in node.attribute};x=[env[k] if k else None for k in node.input];op=node.op_type
++  try:
++   if op=='Constant':y=torch.from_numpy(numpy_helper.to_array(a['value']).copy()).to('musa')
++   elif op=='Add':y=x[0]+x[1]
++   elif op=='Sub':y=x[0]-x[1]
++   elif op=='Mul':y=x[0]*x[1]
++   elif op=='Div':y=x[0]/x[1]
++   elif op=='MatMul':y=x[0]@x[1]
++   elif op=='Gemm':
++    lhs=x[0].T if a.get('transA',0) else x[0];rhs=x[1].T if a.get('transB',0) else x[1]
++    y=a.get('alpha',1.)*(lhs@rhs)+(a.get('beta',1.)*x[2] if len(x)>2 else 0)
++   elif op=='Sigmoid':y=torch.sigmoid(x[0])
++   elif op=='Tanh':y=torch.tanh(x[0])
++   elif op=='Round':y=torch.round(x[0])
++   elif op=='Reshape':
++    shape=[int(v) for v in values(x[1])];shape=[x[0].shape[i] if v==0 and not a.get('allowzero',0) else v for i,v in enumerate(shape)];y=x[0].reshape(shape)
++   elif op=='Shape':y=torch.tensor(list(x[0].shape)[a.get('start',0):a.get('end',len(x[0].shape))],device='musa',dtype=torch.int64)
++   elif op=='Cast':y=x[0].to(DTYPES[a['to']])
++   elif op=='Concat':y=torch.cat(x,dim=a['axis'])
++   elif op=='Transpose':y=x[0].permute(a.get('perm',list(reversed(range(x[0].ndim)))))
++   elif op=='Unsqueeze':
++    y=x[0];axes=values(x[1]) if len(x)>1 else a['axes']
++    for axis in sorted(int(i)%(x[0].ndim+len(axes)) for i in axes):y=y.unsqueeze(axis)
++   elif op=='Squeeze':
++    y=x[0];axes=values(x[1]) if len(x)>1 else a.get('axes')
++    if axes is None:y=y.squeeze()
++    else:
++     for axis in sorted([int(i)%x[0].ndim for i in axes],reverse=True):
++      assert y.shape[axis]==1;y=y.squeeze(axis)
++   elif op=='Slice':
++    starts=values(x[1]);ends=values(x[2]);axes=values(x[3]) if len(x)>3 else range(len(starts));steps=values(x[4]) if len(x)>4 else [1]*len(starts);s=[slice(None)]*x[0].ndim
++    for st,en,ax,step in zip(starts,ends,axes,steps):s[int(ax)]=slice(int(st),int(en),int(step))
++    y=x[0][tuple(s)]
++   elif op=='Equal':y=x[0]==x[1]
++   elif op=='Where':y=torch.where(x[0],x[1],x[2])
++   elif op=='Expand':y=x[0].expand(torch.broadcast_shapes(x[0].shape,tuple(int(v) for v in values(x[1]))))
++   elif op=='ConstantOfShape':
++    val=numpy_helper.to_array(a['value']).copy() if 'value' in a else np.array([0],dtype=np.float32);y=torch.full(tuple(int(v) for v in values(x[0])),val.item(),device='musa',dtype=torch.from_numpy(val).dtype)
++   elif op=='Gather':
++    axis=a.get('axis',0)%x[0].ndim;idx=x[1].long();idx=torch.where(idx<0,idx+x[0].shape[axis],idx);y=torch.index_select(x[0],axis,idx.reshape(-1)).reshape((*x[0].shape[:axis],*idx.shape,*x[0].shape[axis+1:]))
++   elif op=='ScatterND':
++    assert a.get('reduction',b'none')==b'none';y=x[0].clone();indices=x[1].long();k=indices.shape[-1];flat=indices.reshape(-1,k);updates=x[2].reshape((-1,*x[0].shape[k:]));y[tuple(flat[:,i] for i in range(k))]=updates
++   elif op=='ReduceSum':y=x[0].sum(dim=tuple(int(v) for v in values(x[1])) if len(x)>1 else tuple(a.get('axes',range(x[0].ndim))),keepdim=bool(a.get('keepdims',1)))
++   else:raise NotImplementedError(op)
++   assert len(node.output)==1;env[node.output[0]]=y
++  except Exception as e:raise RuntimeError(f'{node.name} ({op}): {e}') from e
++ return env[model.graph.output[0].name]
++
++class Graph(torch.nn.Module):
++    def __init__(self, model):
++        super().__init__()
++        self.model=model
++        self.weights={a.name:torch.from_numpy(numpy_helper.to_array(a).copy()).to('musa') for a in model.graph.initializer}
++    def forward(self, tensor):
++        return execute(self.model, self.weights, tensor)
++
++class Session:
++    def __init__(self, path, output_name):
++        torch.set_num_threads(1)
++        if not torch.musa.is_available():
++            raise RuntimeError('MUSA is unavailable; CPU inference fallback is forbidden')
++        self.model=onnx.load(path)
++        onnx.checker.check_model(self.model)
++        if len(self.model.graph.input)!=1 or len(self.model.graph.output)!=1:
++            raise ValueError('Expected single ONNX input/output')
++        inp=self.model.graph.input[0];out=self.model.graph.output[0]
++        if inp.name!='obs_dict' or out.name!=output_name:
++            raise ValueError('ONNX I/O names differ from SONIC contract')
++        if inp.type.tensor_type.elem_type!=1 or out.type.tensor_type.elem_type!=1:
++            raise ValueError('SONIC requires FP32 model I/O')
++        shape=[d.dim_value for d in inp.type.tensor_type.shape.dim]
++        out_shape=[d.dim_value for d in out.type.tensor_type.shape.dim]
++        if len(shape)!=2 or shape[0]!=1 or any(d<=0 for d in shape+out_shape):
++            raise ValueError('Only fixed batch-one ONNX graphs are supported')
++        self.input_dimension=int(np.prod(shape));self.output_dimension=int(np.prod(out_shape))
++        self.input=torch.zeros(shape,device='musa',dtype=torch.float32)
++        graph=Graph(self.model).eval()
++        # Shapes/axes are fixed by the original ONNX. Tensor arithmetic and mode
++        # selection remain in the traced graph; no observations are precomputed.
++        with torch.no_grad(), warnings.catch_warnings():
++            warnings.simplefilter('ignore',torch.jit.TracerWarning)
++            self.graph=torch.jit.trace(graph,self.input,check_trace=False).eval()
++            # Validate tracing against the original operator interpreter for
++            # distinct inputs and every encoder mode, before control starts.
++            gen=np.random.default_rng(20261003)
++            for mode in ([0,1,2] if output_name=='encoded_tokens' else [0]):
++                x=torch.from_numpy((gen.standard_normal(shape)*.1).astype(np.float32)).to('musa')
++                if output_name=='encoded_tokens':x[0,:4]=torch.tensor([mode,0,0,0],device='musa')
++                exact=graph(x);compiled=self.graph(x)
++                torch.testing.assert_close(compiled.cpu(),exact.cpu(),atol=1e-6,rtol=1e-6)
++            for _ in range(3):self.output=self.graph(self.input)
++        torch.musa.synchronize()
++        print(f'SONIC MUSA {output_name}: {path}, {shape} -> {out_shape}, FP32',flush=True)
++
++    def run(self, buffer):
++        x=np.frombuffer(buffer,dtype=np.float32)
++        if x.size!=self.input_dimension:raise ValueError('Observation length mismatch')
++        with torch.no_grad():
++            self.input.copy_(torch.from_numpy(x.copy()).reshape(self.input.shape))
++            self.output=self.graph(self.input)
++            result=self.output.cpu().numpy()
++        if not np.isfinite(result).all():raise RuntimeError('Nonfinite MUSA output')
++        return result.tobytes()
+diff --git a/gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/control_policy.hpp b/gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/control_policy.hpp
+index 040dcf5fc552c7e5978ffd7b592f65afe2b2311b..dc9f69fa0be17b2cdce187513180ce909fdfd366 100644
+--- a/gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/control_policy.hpp
++++ b/gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/control_policy.hpp
+@@ -1,3 +1,6 @@
++#ifdef SONIC_MUSA
++#include "musa_inference.hpp"
++#else
+ /**
+  * @file control_policy.hpp
+  * @brief TensorRT-accelerated control-policy engine (observations → actions).
+@@ -441,3 +444,5 @@ private:
+ 
+ #endif // POLICY_ENGINE_HPP
+ 
++
++#endif // SONIC_MUSA
+diff --git a/gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/encoder.hpp b/gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/encoder.hpp
+index 7d912b5f0b9c3618b644c175e3fcf8a81a9664e5..4e0f08eb2fccfe3e4d717eab59adf61683872c80 100644
+--- a/gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/encoder.hpp
++++ b/gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/encoder.hpp
+@@ -1,3 +1,6 @@
++#ifdef SONIC_MUSA
++#include "musa_inference.hpp"
++#else
+ /**
+  * @file encoder.hpp
+  * @brief TensorRT-accelerated encoder engine (observations → token state).
+@@ -411,3 +414,5 @@ private:
+ };
+ 
+ #endif // ENCODER_HPP
++
++#endif // SONIC_MUSA
+diff --git a/gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/musa_inference.hpp b/gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/musa_inference.hpp
+new file mode 100644
+index 0000000000000000000000000000000000000000..93b8514038ad77a677cd7723ea466483cad2c464
+--- /dev/null
++++ b/gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/musa_inference.hpp
+@@ -0,0 +1,90 @@
++#pragma once
++// Preserve the engine buffer API; all controller observation and action code
++// remains in the original native loop. Python owns only ONNX graph execution.
++#include <Python.h>
++#include <vector>
++#include <string>
++#include <mutex>
++#include <iostream>
++#include <cstring>
++#include <stdexcept>
++#include <cmath>
++
++class MusaInference {
++ public:
++  MusaInference() = default;
++  MusaInference(const MusaInference&) = delete;
++  ~MusaInference() { Destroy(); }
++  bool Initialize(const std::string& path, const char* output, size_t expected_output, bool fp16) {
++    if (fp16) { std::cerr << "MUSA backend requires validated FP32 execution\n"; return false; }
++    static std::once_flag python_once;
++    std::call_once(python_once, [] {
++      Py_Initialize();
++      PyObject* py_path = PySys_GetObject("path");
++      PyObject* directory = PyUnicode_FromString(SONIC_MUSA_PYTHON_DIR);
++      PyList_Append(py_path, directory); Py_DECREF(directory);
++      PyEval_SaveThread();
++    });
++    auto gil = PyGILState_Ensure();
++    PyObject* module = PyImport_ImportModule("musa_onnx");
++    PyObject* type = module ? PyObject_GetAttrString(module, "Session") : nullptr;
++    session_ = type ? PyObject_CallFunction(type, "ss", path.c_str(), output) : nullptr;
++    Py_XDECREF(type); Py_XDECREF(module);
++    if (session_) {
++      PyObject* dim = PyObject_GetAttrString(session_, "input_dimension");
++      if (dim) { input_.resize(PyLong_AsSize_t(dim), 0.f); Py_DECREF(dim); }
++      PyObject* dim_out = PyObject_GetAttrString(session_, "output_dimension");
++      size_t count = dim_out ? PyLong_AsSize_t(dim_out) : 0;
++      Py_XDECREF(dim_out);
++      if (count != expected_output || input_.empty()) {
++        PyErr_SetString(PyExc_ValueError, "SONIC MUSA model I/O dimension mismatch");
++      } else { output_.resize(count, 0.f); initialized_ = true; }
++    }
++    if (PyErr_Occurred()) { PyErr_Print(); initialized_ = false; }
++    PyGILState_Release(gil);
++    return initialized_;
++  }
++  bool Run() {
++    if (!initialized_) return false;
++    auto gil = PyGILState_Ensure();
++    PyObject* bytes = PyBytes_FromStringAndSize(reinterpret_cast<const char*>(input_.data()), input_.size()*sizeof(float));
++    PyObject* result = bytes ? PyObject_CallMethod(session_, "run", "O", bytes) : nullptr;
++    Py_XDECREF(bytes);
++    bool ok = result && PyBytes_Check(result) &&
++      PyBytes_Size(result) == static_cast<Py_ssize_t>(output_.size()*sizeof(float));
++    if (ok) {
++      std::memcpy(output_.data(), PyBytes_AsString(result), output_.size()*sizeof(float));
++      for (float value : output_) if (!std::isfinite(value)) ok = false;
++    }
++    if (PyErr_Occurred()) PyErr_Print();
++    Py_XDECREF(result); PyGILState_Release(gil);
++    return ok;
++  }
++  void Destroy() {
++    if (session_) { auto gil = PyGILState_Ensure(); Py_DECREF(session_); session_=nullptr; PyGILState_Release(gil); }
++    initialized_ = false;
++  }
++  bool IsInitialized() const { return initialized_; }
++  bool CaptureGraph() { return initialized_; } // Session prepares the inference graph at initialization.
++  size_t GetInputDimension() const { return input_.size(); }
++  std::vector<float>& GetInputBuffer() { return input_; }
++ protected:
++  std::vector<float> input_, output_;
++ private:
++  PyObject* session_ = nullptr;
++  bool initialized_ = false;
++};
++class EncoderEngine : public MusaInference {
++ public:
++  bool Initialize(const std::string& path, bool fp16=false) { return MusaInference::Initialize(path,"encoded_tokens",64,fp16); }
++  bool Encode() { return Run(); }
++  size_t GetTokenDimension() const { return output_.size(); }
++  std::vector<float>& GetTokenBuffer() { return output_; }
++};
++class PolicyEngine : public MusaInference {
++ public:
++  bool Initialize(const std::string& path, bool fp16=false) { return MusaInference::Initialize(path,"action",29,fp16); }
++  bool Infer() { return Run(); }
++  size_t GetActionDimension() const { return output_.size(); }
++  std::vector<float>& GetActionBuffer() { return output_; }
++};
+diff --git a/gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/src/g1_deploy_onnx_ref.cpp b/gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/src/g1_deploy_onnx_ref.cpp
+index c83a586b1d03b2cd55755d9c23d36cc085847935..682cc19e2938ee5acdd5a420be3fae6ff5c77339 100644
+--- a/gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/src/g1_deploy_onnx_ref.cpp
++++ b/gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/src/g1_deploy_onnx_ref.cpp
+@@ -48,7 +48,9 @@
+  *   --motor-kd-scale      | Scale selected hardware motor Kd gains
+  */
+ #include <cmath>
++#ifndef SONIC_MUSA
+ #include <cuda_runtime_api.h>
++#endif
+ #include <memory>
+ #include <mutex>
+ #include <shared_mutex>
+@@ -79,10 +81,14 @@
+ #include <unitree/robot/b2/motion_switcher/motion_switcher_client.hpp>
+ 
+ // TRTInference
++#ifndef SONIC_MUSA
+ #include <TRTInference/InferenceEngine.h>
++#endif
+ 
+ // ONNX
++#ifndef SONIC_MUSA
+ #include <onnxruntime_cxx_api.h>
++#endif
+ 
+ // Motion Data Reader
+ #include "../include/motion_data_reader.hpp"
+@@ -95,7 +101,9 @@
+ 
+ // New Planner Classes
+ #include "../include/localmotion_kplanner.hpp"
++#ifndef SONIC_MUSA
+ #include "../include/localmotion_kplanner_tensorrt.hpp"
++#endif
+ 
+ // Utility classes
+ #include "../include/utils.hpp"
+@@ -124,7 +132,9 @@
+ 
+ #include "../include/output_interface/zmq_output_handler.hpp"
+ 
++#ifndef SONIC_MUSA
+ #include <cuda_runtime.h>
++#endif
+ #include "../include/state_logger.hpp"
+ 
+ // Encoder
+@@ -2446,7 +2456,11 @@ class G1Deploy {
+           std::cout << "Unsupported planner version: " << planner_path << std::endl;
+           throw std::runtime_error("Unsupported planner version: " + planner_path);
+         }
++        #ifdef SONIC_MUSA
++        throw std::runtime_error("MUSA replay build does not provide the optional locomotion planner");
++#else
+         planner_ = std::make_unique<LocalMotionPlannerTensorRT>(planner_fp16, 0, planner_config);
++#endif
+       }
+       
+       // Initialize observation function map

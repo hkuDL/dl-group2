@@ -1,0 +1,345 @@
+--- a/gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/src/g1_deploy_onnx_ref.cpp
++++ b/gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/src/g1_deploy_onnx_ref.cpp
+@@ -221,12 +221,136 @@
+     // =========================================================================
+     // Motion data reader and current motion
+     MotionDataReader motion_reader_;
++    std::filesystem::path reference_command_path_;
++    std::filesystem::path reference_status_path_;
+     
+     // Current motion and frame (using shared_ptr for thread safety)
+     std::shared_ptr<const MotionSequence> current_motion_ = nullptr;
+     int current_frame_ = 0;
+     int saved_frame_for_observation_window_ = 0; // for observation window
++    // Hot continuations use a local frame cursor per clip, but keep one global
++    // reference epoch and one heading/root context for the whole task.
++    std::uint64_t reference_epoch_frames_ = 0;
++    bool reference_heading_initialized_ = false;
+     std::mutex current_motion_mutex_; // for current motion and frame synchronization
++
++    void PublishReferenceStatus(const std::string& value) {
++      if (reference_status_path_.empty()) return;
++      const auto temporary = reference_status_path_.string() + ".tmp";
++      std::ofstream out(temporary, std::ios::trunc);
++      out << value << std::endl;
++      out.close();
++      std::error_code ec;
++      std::filesystem::rename(temporary, reference_status_path_, ec);
++      if (ec) {
++        std::filesystem::remove(reference_status_path_, ec);
++        ec.clear();
++        std::filesystem::rename(temporary, reference_status_path_, ec);
++      }
++    }
++
++    void AlignContinuation(MotionSequence& next, const MotionSequence& held, int held_frame) {
++      // Make the first reference window exactly continuous with the held final
++      // frame.  The offset is smoothly removed while the new clip takes over.
++      const int blend_frames = std::min(20, next.timesteps);
++      if (blend_frames <= 0) return;
++
++      const int joint_count = std::min(next.GetNumJoints(), held.GetNumJoints());
++      const int body_count = std::min(next.GetNumBodies(), held.GetNumBodies());
++      const int quat_count = std::min(next.GetNumBodyQuaternions(), held.GetNumBodyQuaternions());
++
++      std::vector<double> joint_offset(joint_count, 0.0);
++      for (int joint = 0; joint < joint_count; ++joint) {
++        joint_offset[joint] = held.JointPositions(held_frame)[joint] - next.JointPositions(0)[joint];
++      }
++      std::vector<MotionSequence::Point> body_offset(body_count);
++      for (int body = 0; body < body_count; ++body) {
++        for (int axis = 0; axis < 3; ++axis) {
++          body_offset[body][axis] = held.BodyPositions(held_frame)[body][axis] - next.BodyPositions(0)[body][axis];
++        }
++      }
++
++      for (int frame = 0; frame < blend_frames; ++frame) {
++        const double u = blend_frames == 1 ? 1.0 : static_cast<double>(frame) / (blend_frames - 1);
++        const double alpha = u * u * (3.0 - 2.0 * u);  // smoothstep
++        const double held_weight = 1.0 - alpha;
++        for (int joint = 0; joint < joint_count; ++joint) {
++          next.JointPositions(frame)[joint] += held_weight * joint_offset[joint];
++          next.JointVelocities(frame)[joint] *= alpha;
++        }
++        for (int body = 0; body < body_count; ++body) {
++          for (int axis = 0; axis < 3; ++axis) {
++            next.BodyPositions(frame)[body][axis] += held_weight * body_offset[body][axis];
++            next.BodyLinVelocities(frame)[body][axis] *= alpha;
++            next.BodyAngVelocities(frame)[body][axis] *= alpha;
++          }
++        }
++        for (int body = 0; body < quat_count; ++body) {
++          const auto old_q = held.BodyQuaternions(held_frame)[body];
++          auto* new_q = &next.BodyQuaternions(frame)[body];
++          double sign = 1.0;
++          double dot = 0.0;
++          for (int axis = 0; axis < 4; ++axis) dot += old_q[axis] * (*new_q)[axis];
++          if (dot < 0.0) sign = -1.0;
++          double norm = 0.0;
++          for (int axis = 0; axis < 4; ++axis) {
++            (*new_q)[axis] = held_weight * old_q[axis] + alpha * sign * (*new_q)[axis];
++            norm += (*new_q)[axis] * (*new_q)[axis];
++          }
++          norm = std::sqrt(std::max(norm, 1e-12));
++          for (int axis = 0; axis < 4; ++axis) (*new_q)[axis] /= norm;
++        }
++      }
++    }
++
++    void PollReferenceCommand() {
++      if (reference_command_path_.empty() || !std::filesystem::exists(reference_command_path_)) return;
++      auto claimed = reference_command_path_;
++      claimed += ".processing";
++      std::error_code ec;
++      std::filesystem::rename(reference_command_path_, claimed, ec);
++      if (ec) return;
++
++      std::ifstream input(claimed);
++      std::string directory;
++      std::getline(input, directory);
++      input.close();
++      try {
++        auto loaded = MotionDataReader::LoadSingleMotion(directory);
++        if (!loaded || loaded->timesteps == 0) {
++          throw std::runtime_error("invalid or empty reference: " + directory);
++        }
++        // The reader exposes immutable clips; make a private copy so the
++        // continuation prefix can be aligned before atomic publication.
++        auto replacement = std::make_shared<MotionSequence>(*loaded);
++        {
++          std::lock_guard<std::mutex> lock(current_motion_mutex_);
++          // A continuation may only be attached while the controller is
++          // actively holding a paused reference.  Never interrupt a clip.
++          if (operator_state.play) {
++            throw std::runtime_error("reference continuation rejected: current clip is still playing");
++          }
++          if (current_motion_ && current_motion_->timesteps > 0) {
++            const int held_frame = std::clamp(current_frame_, 0, current_motion_->timesteps - 1);
++            AlignContinuation(*replacement, *current_motion_, held_frame);
++            reference_epoch_frames_ += static_cast<std::uint64_t>(held_frame + 1);
++          }
++          current_motion_ = replacement;
++          current_frame_ = 0;
++          // This value only describes the new clip's look-ahead span; heading,
++          // root anchoring, policy state, and the running control loop survive.
++          saved_frame_for_observation_window_ = 0;
++        }
++        PublishReferenceStatus("continued " + replacement->name + " " + std::to_string(replacement->timesteps));
++        std::cout << "[HotReference] attached continuous segment " << replacement->name
++                  << " (" << replacement->timesteps << " frames, global epoch "
++                  << reference_epoch_frames_ << ", paused until start signal)" << std::endl;
++      } catch (const std::exception& error) {
++        PublishReferenceStatus(std::string("error ") + error.what());
++        std::cerr << "[HotReference] " << error.what() << std::endl;
++      }
++      std::filesystem::remove(claimed, ec);
++    }
+     
+     // =========================================================================
+     // Local motion planner and movement state
+@@ -588,9 +712,10 @@
+         std::cout << "**********************************************************" << std::endl;
+       }
+ 
+-      if (current_frame_ == 0) {
++      if (!reference_heading_initialized_) {
+         const auto motion_body_quat_init = current_motion_->BodyQuaternions(0);
+         init_ref_data_root_rot_array_ = motion_body_quat_init[0];
++        reference_heading_initialized_ = true;
+       }
+     }
+ 
+@@ -2213,6 +2338,9 @@
+         model_path(model_file_path),
+         planner_path(planner_file_path) {
+ 
++      reference_command_path_ = std::filesystem::path(motion_data_path) / ".sonic_reference_command";
++      reference_status_path_ = std::filesystem::path(motion_data_path) / ".sonic_reference_status";
++
+       const auto kp_scales = format_motor_gain_scales(motor_gain_scales_.kp);
+       const auto kd_scales = format_motor_gain_scales(motor_gain_scales_.kd);
+       if (!kp_scales.empty()) {
+@@ -3434,10 +3562,9 @@
+             } else {
+               std::cout << "Temporary motion completed." << std::endl;
+             }
+-            current_frame_ = 0; // Reset to beginning
+-            // Total reset: both base quaternion and delta heading
+-            reinitialize_heading_ = true;
+-            std::cout << "Reset to frame 0." << std::endl;
++            current_frame_ = static_cast<int>(current_motion_->timesteps) - 1;
++            PublishReferenceStatus("holding " + current_motion_->name + " " + std::to_string(current_frame_));
++            std::cout << "Paused at final frame; controller and root/heading context remain active while awaiting a continuation." << std::endl;
+           }
+         } else {
+           if (current_frame_ >= current_motion_->timesteps - saved_frame_for_observation_window_) {
+@@ -3460,6 +3587,7 @@
+      */
+     void Input() {
+       if (operator_state.stop) { return; }
++      PollReferenceCommand();
+       
+       // Update input interface (poll for new data)
+       input_interface_->update();
+@@ -3961,6 +4089,17 @@
+             current_motion_copy = current_motion_;
+             current_encoder_mode_copy = current_motion_copy->GetEncodeMode();
+             current_play_copy = operator_state.play;
++
++            // CSV hand targets share the exact body-motion playback cursor.
++            // Clips without these files retain the input interface's hand control.
++            if (current_motion_copy->HasHandPositions(true)) {
++              left_hand_joint_buffer_ = current_motion_copy->HandPositions(current_frame_copy, true);
++              has_left_hand_data_ = true;
++            }
++            if (current_motion_copy->HasHandPositions(false)) {
++              right_hand_joint_buffer_ = current_motion_copy->HandPositions(current_frame_copy, false);
++              has_right_hand_data_ = true;
++            }
+ 
+             // reset saved frame for observation window before gathering observations so that we can get the latest value
+             saved_frame_for_observation_window_ = 0;
+--- a/gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/motion_data_reader.hpp
++++ b/gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/motion_data_reader.hpp
+@@ -68,6 +68,7 @@
+     using Point = std::array<double, 3>;
+     using Quaternion = std::array<double, 4>;
+     using Velocity = std::array<double, 3>;
++    using HandPose = std::array<double, 7>;
+ 
+     double *JointPositions(int frame) { return joint_positions_.data() + frame * num_joints; }
+     double *JointVelocities(int frame) { return joint_velocities_.data() + frame * num_joints; }
+@@ -86,6 +87,13 @@
+     const Velocity *BodyAngVelocities(int frame) const { return body_ang_velocities_.data() + frame * num_bodies; }
+     const Point *SmplJoints(int frame) const { return smpl_joints_.data() + frame * num_smpl_joints; }
+     const Point *SmplPoses(int frame) const { return smpl_poses_.data() + frame * num_smpl_poses; }
++
++    bool HasHandPositions(bool is_left) const {
++      return !(is_left ? left_hand_positions_ : right_hand_positions_).empty();
++    }
++    const HandPose& HandPositions(int frame, bool is_left) const {
++      return (is_left ? left_hand_positions_ : right_hand_positions_)[frame];
++    }
+ 
+     int GetNumJoints() const { return num_joints; }
+     int GetNumBodies() const { return num_bodies; }
+@@ -265,6 +273,10 @@
+     // Joint data (timesteps x joints) - using double precision
+     std::vector<double> joint_positions_; // [timestep][joint_id]
+     std::vector<double> joint_velocities_; // [timestep][joint_id]
++
++    // Optional Dex3 targets: thumb (3), middle (2), index (2), in SDK order.
++    std::vector<HandPose> left_hand_positions_;
++    std::vector<HandPose> right_hand_positions_;
+ 
+     // Body data (timesteps x body_parts x coordinates) - using double precision
+ 
+@@ -860,6 +872,21 @@
+           continue;
+         }
+         
++        // Hand trajectories are optional, but present files must match this clip.
++        bool hands_valid = true;
++        for (bool is_left : {true, false}) {
++          const std::string filename = motion_dir + (is_left ? "/left_hand_pos.csv" : "/right_hand_pos.csv");
++          if (!std::filesystem::exists(filename)) continue;
++          auto& poses = is_left ? motion->left_hand_positions_ : motion->right_hand_positions_;
++          int frames = ReadCSV3D<7>(filename, poses);
++          if (frames != num_frames || poses.size() != static_cast<size_t>(num_frames)) {
++            std::cerr << "Invalid 7-joint hand trajectory: " << filename << " - SKIPPING MOTION" << std::endl;
++            hands_valid = false;
++            break;
++          }
++        }
++        if (!hands_valid) continue;
++
+         // Decide which missing file warnings to show based on what data we have
+         bool has_robot_data = (num_joints > 0 || num_bodies > 0 || num_body_quaternions > 0);
+         bool has_smpl_data = (num_smpl_joints > 0 || num_smpl_poses > 0);
+@@ -893,6 +920,9 @@
+         motion->ang_filter_tmp.resize(num_frames);
+ 
+         std::cout << "✓ Loaded " << motion_name << " (" << motion->timesteps << " timesteps)" << std::endl;
++        if (motion->HasHandPositions(true) || motion->HasHandPositions(false)) {
++          std::cout << "  Dex3 hand trajectories enabled" << std::endl;
++        }
+         motions.push_back(motion);
+       }
+ 
+@@ -922,6 +952,15 @@
+     std::shared_ptr<const MotionSequence> GetMotion(size_t index) const {
+       if (index < motions.size()) { return motions[index]; }
+       return nullptr;
++    }
++
++    /// Load one fully-published clip without mutating the active library.
++    static std::shared_ptr<const MotionSequence> LoadSingleMotion(
++        const std::filesystem::path& motion_directory) {
++      if (!std::filesystem::is_directory(motion_directory)) return nullptr;
++      MotionDataReader candidate;
++      if (!candidate.ReadFromCSV(motion_directory.parent_path().string())) return nullptr;
++      return candidate.GetMotion(motion_directory.filename().string());
+     }
+     
+     // Alias for GetMotion - kept for backward compatibility
+--- a/gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/input_interface/keyboard_handler.hpp
++++ b/gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/input_interface/keyboard_handler.hpp
+@@ -22,6 +22,12 @@
+  *   Enter | Toggle planner mode
+  *   Z/z | Toggle encoder mode
+  *
++ * ### Dex3 hands (both modes)
++ *   U/u | Close right hand
++ *   Y/y | Open right hand
++ *   K/k | Close left hand
++ *   M/m | Open left hand
++ *
+  * ### Planner mode (Enter to toggle)
+  *   Key | Action
+  *   ----|-------
+@@ -131,6 +137,9 @@
+       tcsetattr(STDIN_FILENO, TCSANOW, &new_termios);
+       fcntl(STDIN_FILENO, F_SETFL, O_NONBLOCK);  // Non-blocking reads
+       type_ = InputType::KEYBOARD;
++      has_hand_joints_ = true;
++      left_hand_joint_.SetData(std::array<double, 7>{});
++      right_hand_joint_.SetData(std::array<double, 7>{});
+     }
+ 
+     /// Restore original terminal settings on destruction.
+@@ -175,6 +184,13 @@
+       // Read keyboard input (using shared buffered reading)
+       char ch;
+       while (ReadStdinChar(ch)) {
++        // Keep hand targets in the input buffers used by the control loop.
++        switch (ch) {
++          case 'u': case 'U': SetHandClosed(false, true); continue;
++          case 'y': case 'Y': SetHandClosed(false, false); continue;
++          case 'k': case 'K': SetHandClosed(true, true); continue;
++          case 'm': case 'M': SetHandClosed(true, false); continue;
++        }
+         if (use_planner) {
+             switch (ch) {
+                 case 'r':
+@@ -695,6 +711,21 @@
+ 
+ 
+   private:
++    void SetHandClosed(bool is_left, bool closed) {
++      // Thumb (3), middle (2), index (2), in the model/SDK joint order.
++      std::array<double, 7> q{};
++      if (closed) {
++        q = {0.0, 0.2, 1.0, -0.9, -1.0, -0.9, -1.0};
++        if (!is_left) {
++          for (double& angle : q) angle = -angle;
++        }
++      }
++      if (is_left) left_hand_joint_.SetData(q);
++      else right_hand_joint_.SetData(q);
++      std::cout << "[Dex3] " << (is_left ? "Left" : "Right")
++                << " hand " << (closed ? "close" : "open") << std::endl;
++    }
++
+     struct termios old_termios_;
+ };
+ 
