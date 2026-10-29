@@ -1,0 +1,73 @@
+{
+  "kind": "own_ARDY_replay_tracking_compensation",
+  "source_run": "/workspace/group2/workspace/fuyuhan/ardy_tabletop_segmented_20261008/runs/center_seed0_matrix/replay",
+  "case": {
+    "id": "center",
+    "block_xy": [
+      0.4,
+      -0.15
+    ],
+    "block_yaw_deg": 0
+  },
+  "windows_s": {
+    "close": [
+      7.5,
+      8.5
+    ],
+    "hold": [
+      12,
+      16.18
+    ]
+  },
+  "source_hashes": {
+    "/workspace/group2/workspace/fuyuhan/ardy_tabletop_segmented_20261008/runs/center_seed0_matrix/replay/simulation.npz": "a99e50e7df79a3ea2486976956462b4fbebb330c9a63828632f0e509eb05c45f",
+    "/workspace/group2/workspace/fuyuhan/ardy_tabletop_segmented_20261008/runs/center_seed0_matrix/replay/input_reference.npz": "ccb9f8fbab5c15c40c7334c7bc4c348e7f64ff668c9396cd1bce8dadfbe49d79",
+    "/workspace/group2/workspace/fuyuhan/ardy_tabletop_segmented_20261008/runs/center_seed0_matrix/replay/provenance.json": "37baf7fdc321e065306c24de7821ec89ce840911762dc20c2c1fc6ba772f52d1"
+  },
+  "unclipped": {
+    "close": {
+      "position_bias_m": [
+        0.017787440394624987,
+        -0.013496892296651464,
+        -0.0008681419582781125
+      ],
+      "rotation_bias_rad": [
+        0.01997217786694606,
+        -0.033274033243891374,
+        0.1547300367382897
+      ]
+    },
+    "hold": {
+      "position_bias_m": [
+        0.0329667234679584,
+        0.00029672143729063405,
+        -0.011524226975638041
+      ],
+      "rotation_bias_rad": [
+        -0.06953481900571218,
+        0.024532303444700684,
+        0.3108285300728175
+      ]
+    }
+  },
+  "close_position_bias_m": [
+    0.017787440394624987,
+    -0.013496892296651464,
+    -0.0008681419582781125
+  ],
+  "close_rotation_bias_rad": [
+    0.01997217786694606,
+    -0.033274033243891374,
+    0.1547300367382897
+  ],
+  "hold_position_bias_m": [
+    0.0329667234679584,
+    0.00029672143729063405,
+    -0.011524226975638041
+  ],
+  "hold_rotation_bias_rad": [
+    -0.06530017007480649,
+    0.02303829376666842,
+    0.29189916890687106
+  ]
+}

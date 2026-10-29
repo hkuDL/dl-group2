@@ -1,0 +1,229 @@
+{
+  "mode": "development_debug",
+  "case": "center",
+  "seed": 1,
+  "duration_s": 16.2,
+  "source_fps": 30,
+  "source_frames": 487,
+  "reference_hz": 50,
+  "reference_frames": 810,
+  "reference_span_s": 16.18,
+  "physics_hz": 200,
+  "physical_gpu": 1,
+  "model": "Kimodo-G1-RP-v1",
+  "prompts": [
+    "A standing person slowly raises the right hand outside the front edge of a table.",
+    "A standing person reaches the right hand over the table and lowers it beside a red cube.",
+    "A standing person steadily grasps a red cube with the right hand.",
+    "A standing person slowly lifts a red cube with the right hand.",
+    "A standing person holds a red cube steadily in the right hand above the table."
+  ],
+  "segmented": true,
+  "segment_frames": [
+    120,
+    120,
+    60,
+    60,
+    127
+  ],
+  "model_api_call_count": 1,
+  "expected_model_sampling_calls": 5,
+  "num_denoising_steps": 100,
+  "cfg": [
+    2,
+    4
+  ],
+  "transition_frames": 5,
+  "native_postprocessing": false,
+  "warm_up": false,
+  "candidate_count": 1,
+  "retry_count": 4,
+  "manual_modification_count": 4,
+  "text_encoder": "shared generic pretrained LLM2Vec; authorized frozen copy; no ARDY grasp information",
+  "adapter": {
+    "mode": "neutral-world-wrist",
+    "entry_blend_s": 1.5,
+    "clearance_m": 0.03,
+    "clearance_blend_s": [
+      4,
+      7
+    ],
+    "lift_margin_m": 0,
+    "contact_refine": true,
+    "approach_refine": true,
+    "refinement_blend_s": [
+      1,
+      2
+    ],
+    "position_halfwidth_m": 0.005,
+    "rotation_radius_rad": 0.04,
+    "maximum_position_correction_m": 0.1,
+    "calibration": "/workspace/group2/workspace/kunqi/task9_formal40_20261008/kimodo_frozen_method_source/config/development_calibration.json",
+    "offline_ik": true,
+    "runtime_ik": false,
+    "ik_iterations": 60,
+    "ik_damping": 0.001,
+    "ik_max_step_rad": 0.1,
+    "ik_convergence": 1e-05,
+    "orientation_weight": 0.3,
+    "clearance_decay_s": [
+      6.0,
+      8.0
+    ],
+    "hand_preclose": {
+      "start_s": 7.0,
+      "end_s": 8.0,
+      "fraction": 0.4,
+      "close_end_s": 10.0
+    }
+  },
+  "task_constraints": {
+    "cube_center": [
+      0.4,
+      -0.15,
+      0.785
+    ],
+    "cube_side_m": 0.07,
+    "cube_mass_kg": 0.1,
+    "cube_friction": [
+      0.95,
+      0.01,
+      0.001
+    ],
+    "table_top_m": 0.75,
+    "canonical_wrist_offset_m": [
+      0.135,
+      0.065,
+      0
+    ],
+    "canonical_wrist_orientation_xyz_rad": [
+      -1.5707963267948966,
+      0,
+      0
+    ],
+    "lift_height_m": 0.18,
+    "phases": {
+      "initial": [
+        0,
+        1
+      ],
+      "raise": [
+        1,
+        4
+      ],
+      "cross": [
+        4,
+        6
+      ],
+      "lower": [
+        6,
+        8
+      ],
+      "close": [
+        8,
+        10
+      ],
+      "lift": [
+        10,
+        12
+      ],
+      "hold": [
+        12,
+        16.2
+      ]
+    },
+    "right_hand_final_index_middle": [
+      1.2,
+      1.2,
+      1.2,
+      1.2
+    ],
+    "right_hand_final_thumb": [
+      0,
+      -1,
+      -1.25
+    ],
+    "constraint_keyframe_stride": 6,
+    "fullbody_frames": [
+      0,
+      30
+    ]
+  },
+  "sonic": {
+    "repo": "/workspace/group2/GR00T-WholeBodyControl",
+    "mujoco_version": "3.14.0",
+    "integrator": "implicitfast",
+    "gravity": [
+      0,
+      0,
+      -9.81
+    ],
+    "physics_dt": 0.005,
+    "policy_hz": 50,
+    "hand_pd": [
+      12,
+      0.3
+    ],
+    "thumb0_torque_limit": 2.45,
+    "other_hand_torque_limit": 1.4,
+    "support": false,
+    "weld": false,
+    "external_force": false,
+    "canonical_neutral": "neutral_standing_v1",
+    "initial_pose_source": "public canonical reset"
+  },
+  "success": {
+    "cube_lift_m": 0.1,
+    "contact_force_N": 0.0001,
+    "opposition": "right thumb AND (right index OR right middle)",
+    "continuous_hold_s": 2,
+    "no_cube_table_contact_during_hold": true,
+    "no_fall": true,
+    "no_support": "no artificial support device; natural robot/table contact is diagnostic",
+    "no_weld": true,
+    "complete_finite_synchronized_unassisted_sonic": true,
+    "robot_table_contact": "diagnostic_only"
+  },
+  "read_allowlist": [
+    "/usr",
+    "/lib",
+    "/lib64",
+    "/bin",
+    "/etc",
+    "/proc",
+    "/sys",
+    "/dev",
+    "/opt",
+    "/run",
+    "/workspace/group2/workspace/amy/kimodo-work/.venv",
+    "/workspace/group2/workspace/kunqi/task9_formal40_20261008/kimodo_frozen_method_source/code",
+    "/workspace/group2/workspace/kunqi/task9_formal40_20261008/kimodo_frozen_method_source/tests",
+    "/workspace/group2/workspace/kunqi/task9_formal40_20261008/kimodo_frozen_method_source/config",
+    "/workspace/group2/workspace/kunqi/task9_formal40_20261008/kimodo_frozen_method_source/qualification",
+    "/workspace/group2/workspace/kunqi/task9_formal40_20261008/kimodo_frozen_method_source/assets",
+    "/workspace/group2/GR00T-WholeBodyControl",
+    "/workspace/group2/kimodo-t6/g1-integration/checkpoints/Kimodo-G1-RP-v1",
+    "/tmp/kimodo_task8_dev_v3_run05",
+    "/workspace/group2/kimodo-t6/g1-integration/task8_development_20261007_v3/run_01/qualification/task",
+    "/workspace/group2/kimodo-t6/g1-integration/task8_development_20261007_v3/run_01/qualification/generation",
+    "/workspace/group2/kimodo-t6/g1-integration/task8_development_20261007_v3/run_01/qualification/replay"
+  ],
+  "readonly_dependencies": {
+    "unitree_sdk2py": {
+      "path": "/workspace/group2/workspace/kunqi/task9_formal40_20261008/kimodo_frozen_method_source/assets/unitree_sdk2_python",
+      "source_hashes_file": "config/unitree_sdk_source_hashes.json",
+      "preflight": "import_only_no_DDS_initialization"
+    }
+  },
+  "classification": "development_tuned_candidate",
+  "development_iteration": 5,
+  "prior_motion_calibration_used": false,
+  "development_prior_replay_count": 4,
+  "source_task": "/workspace/group2/workspace/kunqi/task9_formal40_20261008/kimodo_frozen_method_source/qualification/task",
+  "source_generation": "/workspace/group2/workspace/kunqi/task9_formal40_20261008/kimodo_frozen_method_source/qualification/generation",
+  "reuse_actual_generation": false,
+  "accepted_evidence": "/workspace/group2/kimodo-t6/g1-integration/task8_development_20261007_v3/run_03/qualification/replay",
+  "evaluation_rule": "user_task_criteria_robot_table_diagnostic_20261007_v1",
+  "formal_qualification": false,
+  "stability_probe": "center_seed1_new_kimodo_generation_one_trial"
+}

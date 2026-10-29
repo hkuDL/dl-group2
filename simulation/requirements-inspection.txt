@@ -1,0 +1,6 @@
+# Host-only source/contract inspection. This does not install a GPU runtime.
+numpy
+scipy
+Pillow
+PyYAML
+pytest
